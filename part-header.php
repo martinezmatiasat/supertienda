@@ -1,4 +1,3 @@
-<?php include_once 'config.php' ?>
 <!-- HEADER START -->
 <header class="navbar navbar-custom" id="header">
     <div class="header-middle">
@@ -73,9 +72,9 @@
                                             <span class="pull-right"><strong class="price-box">$29.98</strong></span>
                                         </p>
                                         <div class="clearfix"></div>
-                                        <div class="mt-20">
+                                        <div class="mt-20"> 
                                             <a href="cart.php" class="btn-color btn">Cart</a>
-                                            <a href="checkout.php" class="btn-color btn right-side">Checkout</a>
+                                            <a href="checkout.php" class="btn-color btn right-side">Checkout</a> 
                                         </div>
                                     </div>
                                 </li>
@@ -87,7 +86,7 @@
         </div>
     </div>
     <div class="header-bottom">
-        <div class="container">
+        <div class="container"> 
             <div id="menu" class="navbar-collapse collapse left-side align-center" >
                 <ul class="nav navbar-nav">
                     <li class="level"><a href="" class="page-scroll">Todas las categorías</a></li>

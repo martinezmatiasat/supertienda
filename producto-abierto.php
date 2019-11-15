@@ -1,16 +1,15 @@
-<?php include_once 'config.php' ?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="es-AR">
     <!--<![endif]-->
-
+    
     <?php require('part-head.php'); ?>
-
+    
     <body>
         <div class="se-pre-con"></div>
-        <div class="main">
-
-            <?php require('part-header.php'); ?>
+        <div class="main"> 
+            
+            <?php require('part-header.php'); ?> 
 
             <!-- BANNER STRAT -->
             <div class="banner inner-banner">
@@ -26,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <!-- BANNER END -->
+            <!-- BANNER END -->  
 
             <!-- CONTAIN START -->
             <section class="container">
@@ -53,9 +52,9 @@
                                                 <del class="price old-price">$100.00</del>
                                             </div>
                                             <p>
-                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta
-                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta
-                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta
+                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta 
+                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta 
+                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta 
                                             </p>
                                             <div class="mb-40">
                                                 <div class="bottom-detail cart-button">
@@ -69,19 +68,29 @@
                                                     </ul>
                                                 </div>
                                             </div>
+                                            
+                                            <!-- esto se imprime una vez clickeado en obtener cupon -->
                                             <div class="detail-inner-left">
                                                 <ul>
-                                                    <!-- <li class="pro-cart-icon">
-                                                      <form>
-                                                        <button title="Add to Cart"><span></span></button>
-                                                      </form>
-                                                    </li> -->
                                                     <h3>
                                                         El cupón es: xxxxxxx <br/>
                                                         y tiene una validez de xx días.
                                                     </h3>
+                                                    <p>Enviar cupón por correo:</p>
+                                                    <form action="" method="post">
+                                                        <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
+                                                        <div class="form-group">
+                                                            <input type="email" name="emailcupon" class="form-control" required data-required-error="Campo Obligatorio" placeholder="ejemplo@dominio.com">
+                                                            <div class="help-block with-errors"></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button type="submit" name="submit" class="btn-black">Enviar cupón</button>
+                                                        </div>
+                                                    </form>
                                                 </ul>
                                             </div>
+                                            <!-- /esto se imprime una vez clickeado en obtener cupon -->
+                                            
                                             <div class="share-link">
                                                 <label>Compatir en : </label>
                                                 <div class="social-link">
@@ -330,12 +339,12 @@
                     </div>
                 </div>
             </section>
-            <!-- CONTAINER END -->
+            <!-- CONTAINER END --> 
 
             <?php require('part-footer.php'); ?>
-
+            
         </div>
-
+        
         <?php require('part-script.php'); ?>
 
     </body>

@@ -1,4 +1,3 @@
-<?php include_once 'config.php' ?>
 <!-- FOOTER START -->
 <div class="footer">
     <div class="footer-inner">
@@ -121,4 +120,4 @@
 <div class="scroll-top">
     <div id="scrollup"></div>
 </div>
-<!-- FOOTER END -->
+<!-- FOOTER END --> 
