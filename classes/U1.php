@@ -5,12 +5,14 @@ class U1{
 	public $usuario = null;
 	public $clave = null;
 	public $email = null;
+	public $rol = null;
 
 	public function __construct( $data=array() ) {
 		if ( isset( $data["u1_id"])) $this->u1_id = $data["u1_id"];
 		if ( isset( $data["usuario"])) $this->usuario = $data["usuario"];
 		if ( isset( $data["clave"])) $this->clave = $data["clave"];
 		if ( isset( $data["email"])) $this->email = $data["email"];
+		if ( isset( $data["rol"])) $this->rol = $data["rol"];
 	}
 
 	public static function getById( $u1_id ) {

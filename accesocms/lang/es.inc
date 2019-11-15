@@ -196,6 +196,7 @@ $lang = array(
 	"VENDEDOR_DELETE_CONFIRM" => "Desea eliminar este Vendedor?",
 	"VENDEDOR_ERROR_1" => "El campo nombre_tienda es obligatorio",
 	"VENDEDOR_ERROR_2" => "El campo url es obligatorio",
+	"VENDEDOR_ERROR_3" => "El campo mail es obligatorio",
 	"VENDEDOR_COL_VENDEDOR_ID" => "vendedor_id",
 	"VENDEDOR_COL_NOMBRE" => "nombre",
 	"VENDEDOR_COL_APELLIDO" => "apellido",

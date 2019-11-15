@@ -1,10 +1,9 @@
+<?php include_once('config.php') ?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="es-AR">
     <!--<![endif]-->
-    
     <?php require('part-head.php'); ?>
-    
     <body>
             <div class="se-pre-con"></div>
         <div id="newslater-popup" class="mfp-hide white-popup-block open align-center">
@@ -20,7 +19,7 @@
                   <div class="newsletter-inner">
                     <h2 class="main_title">Suscribite</h2>
                     <p>
-                        Dejanos tu correo y recibí Ofertas increíbles. 
+                        Dejanos tu correo y recibí Ofertas increíbles.
                         <br/> <br/>
                     </p>
                     <form>
@@ -41,16 +40,16 @@
             </div>
           </div>
         </div>
-        <div class="main"> 
-            
+        <div class="main">
+
             <?php require('part-header.php'); ?>
 
             <!-- BANNER STRAT -->
             <section>
                 <div class="banner">
                     <div class="main-banner">
-                        <div class="banner-2"> 
-                            <img src="images/banner.PNG" alt="Masha Wow"> 
+                        <div class="banner-2">
+                            <img src="images/banner.PNG" alt="Masha Wow">
                             <div class="banner-detail">
                                 <div class="row">
                                     <div class="col-md-4 col-sm-5 col-xs-4"></div>
@@ -64,7 +63,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="banner-2"> 
+                        <div class="banner-2">
                             <img src="images/banner.PNG" alt="Masha Wow">
                             <div class="banner-detail">
                                 <div class="row">
@@ -77,9 +76,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
-                        <div class="banner-2"> 
+                        <div class="banner-2">
                             <img src="images/banner.PNG" alt="Masha Wow">
                             <div class="banner-detail">
                                 <div class="row">
@@ -92,12 +91,12 @@
                                     </div>
                                     <div class="col-md-1 col-sm-1 col-xs-1"></div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <!-- BANNER END --> 
+            <!-- BANNER END -->
 
             <!-- CONTAIN START -->
 
@@ -106,33 +105,33 @@
                 <div class="sub-banner-block center-xs pt-30">
                     <div class="row m-0">
                         <div class="col-sm-4">
-                            <div class="sub-banner sub-banner1"> 
+                            <div class="sub-banner sub-banner1">
                                 <a> <img src="images/destacada.PNG" alt="Masha Wow!">
                                     <div class="sub-banner-detail">
                                         <div class="sub-banner-subtitle">Categoría</div>
                                         <div class="sub-banner-title">Destacada</div>
                                     </div>
-                                </a> 
+                                </a>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="sub-banner sub-banner2"> 
+                            <div class="sub-banner sub-banner2">
                                 <a> <img src="images/destacada.PNG" alt="Masha Wow!">
                                     <div class="sub-banner-detail">
                                         <div class="sub-banner-subtitle">Categoría</div>
                                         <div class="sub-banner-title">Destacada</div>
                                     </div>
-                                </a> 
+                                </a>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="sub-banner sub-banner3"> 
+                            <div class="sub-banner sub-banner3">
                                 <a> <img src="images/destacada.PNG" alt="Masha Wow!">
                                     <div class="sub-banner-detail">
                                         <div class="sub-banner-subtitle">Categoría</div>
                                         <div class="sub-banner-title">Destacada</div>
                                     </div>
-                                </a> 
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -408,16 +407,16 @@
                         </div>
                     </div>
                 </div>
-            </section> 
+            </section>
 
-            <!-- CONTAINER END --> 
+            <!-- CONTAINER END -->
 
             <?php require('part-footer.php'); ?>
-            
+
         </div>
-        
+
         <?php require('part-script.php'); ?>
-        
+
         <script>
             /* ------------ Newslater-popup JS Start ------------- */
             $(window).load(function () {

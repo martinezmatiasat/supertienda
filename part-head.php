@@ -1,4 +1,3 @@
-<?php include_once 'config.php' ?>
 <head>
     <!-- Basic Page Needs
       ================================================== -->

@@ -9,16 +9,16 @@ function callback($buffer){}
 	switch ( $action ) {
 		case "new":
 		case "edit":
-		addEditVendedorObject($results);
-		break;
+			addEditVendedorObject($results);
+			break;
 		case "delete":
-		deleteVendedor($results);
-		break;
+			deleteVendedor($results);
+			break;
 		case "deleteAll":
-		deleteAllVendedor($results);
-		break;
+			deleteAllVendedor($results);
+			break;
 		default:
-		listVendedor($results);
+			listVendedor($results);
 	}
 
 	function addEditVendedorObject($results) {
@@ -50,11 +50,11 @@ function callback($buffer){}
 					}else {
 						$u1 = new U1(array("usuario" => $vendedor->mail, "clave" => getVar("clave"), "email" => $vendedor->mail, "rol" => 1));
 						$u1Error = $u1->insert();
-						$multimarca->u1_id = $u1Error['id'];
-						$multimarca->updateFields(array("u1_id"));
+						$vendedor->u1_id = $u1Error['id'];
+						$vendedor->updateFields(array("u1_id"));
 					}
 				}
-				
+
 				header( "Location: vendedores.php?status=changesSaved&page=".(isset($_GET["page"]) ? $_GET["page"] : 1));
 			}else{
 				$results = returnVendedorError($error["error"],$results);
@@ -125,15 +125,16 @@ function callback($buffer){}
 			<?php } ?>
 			<div class="row">
 				<div class="col-xs-12">
-					<div class="widget-box">
-						<div class="widget-title">
-							<span class="icon"><i class="fa fa-align-justify"></i></span>
-							<h5><?php echo showLang($lang, "VENDEDOR_INFO") ?></h5>
-						</div>
-						<div class="widget-content nopadding">
-							<form action="vendedores.php?action=<?php echo $results["formAction"]?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>" method="post" class="form-horizontal validate-form" enctype="multipart/form-data">
+					<form action="vendedores.php?action=<?php echo $results["formAction"]?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>" method="post" class="form-horizontal validate-form" enctype="multipart/form-data">
+						<div class="widget-box">
+							<div class="widget-title">
+								<span class="icon"><i class="fa fa-align-justify"></i></span>
+								<h5><?php echo showLang($lang, "VENDEDOR_INFO") ?></h5>
+							</div>
+							<div class="widget-content nopadding">
 								<div>
 									<input class="form-control input-sm" type="hidden" name="vendedor_id" value='<?php echo $results["vendedor"]->vendedor_id ?>' />
+									<input class="form-control input-sm" type="hidden" name="u1_id" value='<?php echo $results["vendedor"]->u1_id ?>' />
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"VENDEDOR_COL_NOMBRE") ?></label>
@@ -177,19 +178,14 @@ function callback($buffer){}
 										<input class="form-control input-sm" placeholder="<?php echo showLang($lang,"VENDEDOR_COL_MAIL") ?>" type="text" name="mail" value='<?php echo $results["vendedor"]->mail ?>' />
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"VENDEDOR_COL_U1_ID") ?></label>
-									<div class="col-sm-9 col-md-9 col-lg-10  ">
-										<input class="form-control input-sm" placeholder="<?php echo showLang($lang,"VENDEDOR_COL_U1_ID") ?>" type="text" name="u1_id" value='<?php echo $results["vendedor"]->u1_id ?>' />
-									</div>
-								</div>
+
 								<div class="form-actions">
 									<button type="submit" class="btn btn-dark-green btn-sm" name="saveChanges"><?php echo showLang($lang, "SAVE_CHANGES") ?></button>
 									<a class="btn btn-primary btn-sm" href="vendedores.php?page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><?php echo showLang($lang, "CANCEL_CHANGES") ?></a>
 								</div>
-							</form>
+							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 			<script>getTitle('.titulo input', '.url input');</script>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Vendedor{
 	public $vendedor_id = null;
@@ -28,6 +28,11 @@ class Vendedor{
 	    return $result["object"];
 	}
 
+	public static function getByU1($u1) {
+		$result = ConnectionFactory::getFactory()->getByArray("vendedor", array("u1_id"), array($u1), "Vendedor");
+		return $result["object"];
+	}
+
 	public static function getAllList() {
 	    $result = ConnectionFactory::getFactory()->getList("vendedor", "Vendedor", null, null, null );
 	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
@@ -45,17 +50,18 @@ class Vendedor{
 		$error = false;
 		if ($this->nombre_tienda == '' ) $error[] = 'VENDEDOR_ERROR_1';
 		if ($this->url == '' ) $error[] = 'VENDEDOR_ERROR_2';
+		if ($this->mail == '' ) $error[] = 'VENDEDOR_ERROR_2';
 		return $error;
 	}
 
 	public function insert() {
 	    $error = $this->validateBeforeInsert();
 		$id = "0";
-	    if (!$error){ 
+	    if (!$error){
 			$fields = array("nombre","apellido","nombre_tienda","url","direccion","telefono","mail","u1_id");
 			$result = ConnectionFactory::getFactory()->insert($this, "vendedor", $fields);
 			if ($result["error"]) $error = array($result["error"]);
-			$id = $result["id"]; 
+			$id = $result["id"];
 		}
 		return array("error" => $error, "id" => $id);
 	}
@@ -63,14 +69,14 @@ class Vendedor{
 	public function update() {
 		if ( is_null( $this->vendedor_id ) ) trigger_error ( "Update error", E_USER_ERROR );
 		$error = $this->validateBeforeInsert();
-	    if (!$error){ 
+	    if (!$error){
 			$fields = array("nombre","apellido","nombre_tienda","url","direccion","telefono","mail","u1_id");
 			$error = ConnectionFactory::getFactory()->update($this, "vendedor", $fields, "vendedor_id");
 			if ($error) $error = array($error);
 		}
 	    return array("error" => $error, "id" => $this->vendedor_id);
 	}
-		
+
 	public function updateFields($fields) {
 		ConnectionFactory::getFactory()->update($this, "vendedor", $fields, "vendedor_id");
 	}
