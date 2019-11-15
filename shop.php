@@ -1,16 +1,15 @@
-<?php include_once 'config.php' ?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="es-AR">
     <!--<![endif]-->
-
+    
     <?php require('part-head.php'); ?>
-
+    
     <body>
         <div class="se-pre-con"></div>
-        <div class="main">
-
-            <?php require('part-header.php'); ?>
+        <div class="main"> 
+            
+            <?php require('part-header.php'); ?> 
 
             <!-- BANNER STRAT -->
             <div class="banner inner-banner">
@@ -26,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <!-- BANNER END -->
+            <!-- BANNER END --> 
 
             <!-- CONTAIN START -->
             <section class="container pb-85 pt-55">
@@ -52,12 +51,32 @@
                                     </div>
                                     <div class="sidebar-contant">
                                         <ul>
-                                            <li><a>Categoría 1 <span>(21)</span></a></li>
-                                            <li><a>Categoría 2 <span>(05)</span></a></li>
-                                            <li><a>Categoría 3 <span>(10)</span></a></li>
-                                            <li><a>Categoría 4 <span>(12)</span></a></li>
-                                            <li><a>Categoría 5 <span>(18)</span></a></li>
-                                            <li><a>Categoría 6 <span>(70)</span></a></li>
+                                            <li>
+                                                <a href="#">Categoría 1 <span>(21)</span></a>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#">Subcategoría 1 (0)</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Subcategoría 2 (3)</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a href="#">Categoría 2 <span>(05)</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Categoría 3 <span>(10)</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Categoría 4 <span>(12)</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Categoría 5 <span>(18)</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Categoría 6 <span>(70)</span></a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -72,12 +91,12 @@
                                         <div class="list-types grid active ">
                                             <a href="shop.php">
                                                 <div class="grid-icon list-types-icon"></div>
-                                            </a>
+                                            </a> 
                                         </div>
                                         <div class="list-types list">
                                             <a href="shop-list.php">
                                                 <div class="list-icon list-types-icon"></div>
-                                            </a>
+                                            </a> 
                                         </div>
                                     </div>
                                     <div class="short-by float-right-sm">
@@ -487,12 +506,12 @@
                     </div>
                 </div>
             </section>
-            <!-- CONTAINER END -->
+            <!-- CONTAINER END --> 
 
             <?php require('part-footer.php'); ?>
-
+            
         </div>
-
+        
         <?php require('part-script.php'); ?>
 
     </body>

@@ -4070,4 +4070,10 @@ ul.tagcloud li a:hover {
   display: none;
   padding: 8px 15px;
 }
+
+.sidebar-contant ul ul li {
+    padding-left: 20px;
+}
+
 /* Scroll-top Arrow CSS End 
+
