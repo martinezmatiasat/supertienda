@@ -6,6 +6,7 @@ class U1{
 	public $clave = null;
 	public $email = null;
 	public $rol = null;
+	public $vendedor_id = null;
 
 	public function __construct( $data=array() ) {
 		if ( isset( $data["u1_id"])) $this->u1_id = $data["u1_id"];
@@ -13,6 +14,7 @@ class U1{
 		if ( isset( $data["clave"])) $this->clave = $data["clave"];
 		if ( isset( $data["email"])) $this->email = $data["email"];
 		if ( isset( $data["rol"])) $this->rol = $data["rol"];
+		if ( isset( $data["vendedor_id"])) $this->vendedor_id = $data["vendedor_id"];
 	}
 
 	public static function getById( $u1_id ) {
@@ -73,7 +75,7 @@ class U1{
 		$id = "0";
 		if (!$error){
 			$this->clave = sha1($this->clave);
-			$fields = array("usuario","clave","email");
+			$fields = array("usuario","clave","email","rol","vendedor_id");
 			$result = ConnectionFactory::getFactory()->insert($this, "u1", $fields);
 			if ($result["error"]) $error = array($result["error"]);
 			$id = $result["id"];

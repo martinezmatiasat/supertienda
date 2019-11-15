@@ -33,7 +33,7 @@ function callback($buffer){}
 				// GENERO EL USUARIO
 				$vendedor = Vendedor::getById($error['id']);
 				if ($vendedor->u1_id == 0){
-					$u1 = new U1(array("usuario" => $vendedor->mail, "clave" => getVar("clave"), "email" => $vendedor->mail, "rol" => 1));
+				    $u1 = new U1(array("usuario" => $vendedor->mail, "clave" => getVar("clave"), "email" => $vendedor->mail, "rol" => 1, "vendedor_id" => $vendedor->vendedor_id));
 					$u1Error = $u1->insert();
 					$vendedor->u1_id = $u1Error['id'];
 					$vendedor->updateFields(array("u1_id"));
@@ -178,22 +178,12 @@ function callback($buffer){}
 										<input class="form-control input-sm" placeholder="<?php echo showLang($lang,"VENDEDOR_COL_MAIL") ?>" type="text" name="mail" value='<?php echo $results["vendedor"]->mail ?>' />
 									</div>
 								</div>
-<<<<<<< HEAD
-
-=======
-								<div class="form-group">
-									<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"VENDEDOR_COL_U1_ID") ?></label>
-									<div class="col-sm-9 col-md-9 col-lg-10  ">
-										<input class="form-control input-sm" placeholder="<?php echo showLang($lang,"VENDEDOR_COL_U1_ID") ?>" type="text" name="u1_id" value='<?php echo $results["vendedor"]->u1_id ?>' />
-									</div>
-								</div>
 								<div class="form-group">
 									<label class="col-sm-3 col-md-3 col-lg-2 control-label">Clave</label>
 									<div class="col-sm-9 col-md-9 col-lg-10  ">
 										<input class="form-control input-sm" placeholder="Clave" type="password" name="clave" />
 									</div>
 								</div>
->>>>>>> 60db5f302b7db3f4878776a463d13f5fdbbeea83
 								<div class="form-actions">
 									<button type="submit" class="btn btn-dark-green btn-sm" name="saveChanges"><?php echo showLang($lang, "SAVE_CHANGES") ?></button>
 									<a class="btn btn-primary btn-sm" href="vendedores.php?page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><?php echo showLang($lang, "CANCEL_CHANGES") ?></a>
