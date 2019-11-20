@@ -50,7 +50,7 @@ class Vendedor{
 		$error = false;
 		if ($this->nombre_tienda == '' ) $error[] = 'VENDEDOR_ERROR_1';
 		if ($this->url == '' ) $error[] = 'VENDEDOR_ERROR_2';
-		if ($this->mail == '' ) $error[] = 'VENDEDOR_ERROR_2';
+		if ($this->mail == '' ) $error[] = 'VENDEDOR_ERROR_3';
 		return $error;
 	}
 

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Producto{
 	public $producto_id = null;
@@ -30,6 +30,15 @@ class Producto{
 	    return $result["object"];
 	}
 
+	public static function getList($page) {
+	    $rows = getAdminCookieValue("PRODS_PER_PAGE");
+	    if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
+	    $limit1 = ($page-1)*$rows;
+	    $limit2 = $rows;
+	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0"), null );
+	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+	}
+
 	public static function getAllList() {
 	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", null, null, null );
 	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
@@ -54,11 +63,11 @@ class Producto{
 	public function insert() {
 	    $error = $this->validateBeforeInsert();
 		$id = "0";
-	    if (!$error){ 
+	    if (!$error){
 			$fields = array("vendedor_id","nombre","precio","descuento","foto","duracion","descripcion","eliminado","categorias");
 			$result = ConnectionFactory::getFactory()->insert($this, "producto", $fields);
 			if ($result["error"]) $error = array($result["error"]);
-			$id = $result["id"]; 
+			$id = $result["id"];
 		}
 		return array("error" => $error, "id" => $id);
 	}
@@ -66,14 +75,14 @@ class Producto{
 	public function update() {
 		if ( is_null( $this->producto_id ) ) trigger_error ( "Update error", E_USER_ERROR );
 		$error = $this->validateBeforeInsert();
-	    if (!$error){ 
+	    if (!$error){
 			$fields = array("vendedor_id","nombre","precio","descuento","foto","duracion","descripcion","eliminado","categorias");
 			$error = ConnectionFactory::getFactory()->update($this, "producto", $fields, "producto_id");
 			if ($error) $error = array($error);
 		}
 	    return array("error" => $error, "id" => $this->producto_id);
 	}
-		
+
 	public function updateFields($fields) {
 		ConnectionFactory::getFactory()->update($this, "producto", $fields, "producto_id");
 	}

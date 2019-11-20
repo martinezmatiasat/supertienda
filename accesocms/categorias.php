@@ -188,7 +188,6 @@ function addEditCategoria($results){
 								<input class="form-control input-sm" placeholder="<?php echo showLang($lang,"CATEGORIA_COL_NOMBRE") ?>" type="text" name="nombre" required  value='<?php echo $results["categoria"]->nombre ?>' />
 							</div>
 						</div>
-
 						<div class="form-group">
 							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"CATEGORIA_COL_IMAGEN") ?></label>
 						<?php if($results["formAction"] != "edit"){ ?>
@@ -254,21 +253,21 @@ function listCategorias($results){
 					<table class="table table-bordered table-striped table-hover table-condensed sortable-table ">
 						<thead>
 							<tr>
-                                <th width="40px"><input type="checkbox" id="select-all"></th>
+                        <th width="40px"><input type="checkbox" id="select-all"></th>
 								<th width="40px" align="center"></th>
 								<th width="40px" align="center"></th>
 								<th><?php echo showLang($lang,"CATEGORIA_COL_NOMBRE") ?></th>
+								<?php if (!$back){ ?><th>Subcategorias</th><?php } ?>
 								<th><?php echo showLang($lang,"CATEGORIA_COL_IMAGEN") ?></th>
 								<th><?php echo showLang($lang,"CROP") ?></th>
 								<th><?php echo showLang($lang,"CATEGORIA_COL_DESTACADA") ?></th>
-								<?php if (!$back){ ?><th>Subcategorias</th><?php } ?>
 								<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
 							</tr>
 						</thead>
 						<tbody>
 						<?php foreach ( $results["all"] as $num => $a ) { ?>
 							<tr>
-                                <td align="center"><input type="checkbox" name="ids[]" value="<?php echo $a->categoria_id ?>"></td>
+								<td align="center"><input type="checkbox" name="ids[]" value="<?php echo $a->categoria_id ?>"></td>
 								<td align="center"><i data-id="<?php echo $a->categoria_id ?>" class="fa fa-bars"></i></td>
 								<td class="order-col">
 									<a href="categorias.php?action=down&id=<?php echo $num+1 ?>&sid=<?php echo SID ?>" title="<?php echo showLang($lang, "TABLE_DOWN") ?>" class="tip-top set-down">
@@ -291,11 +290,11 @@ function listCategorias($results){
 								</td>
 								<td><?php echo $a->destacada ?></td>
 								<td align="center" width="100px">
-					        		<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="categorias.php?action=edit&amp;id=<?php echo $a->categoria_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>&sid=<?php echo SID ?>"><i class="fa fa-pencil-alt"></i></a>
-					          		<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" data-txt="<?php echo showLang($lang, 'CATEGORIA_DELETE_CONFIRM') ?>" data-href="categorias.php?action=delete&amp;ids=<?php echo $a->categoria_id ?>&sid=<?php echo SID ?>">
-					          			<i class="far fa-trash-alt"></i>
-					          		</a>
-			          			</td>
+									<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="categorias.php?action=edit&amp;id=<?php echo $a->categoria_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>&sid=<?php echo SID ?>"><i class="fa fa-pencil-alt"></i></a>
+									<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" data-txt="<?php echo showLang($lang, 'CATEGORIA_DELETE_CONFIRM') ?>" data-href="categorias.php?action=delete&amp;ids=<?php echo $a->categoria_id ?>&sid=<?php echo SID ?>">
+										<i class="far fa-trash-alt"></i>
+									</a>
+								</td>
 							</tr>
 						<?php } ?>
 			    		</tbody>

@@ -117,5 +117,20 @@ class Categoria{
 		$result = ConnectionFactory::getFactory()->getList("categoria", "Categoria", null, array("subcategoria_id = $sid"), "orden" );
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
+
+	public static function getCategoriasMultiple($name, $selected){
+		$categorias = Categoria::getAllListSubcategoria(0);
+		$select = '<select class="select2" multiple id="'.$name.'" name="'.$name.'[]" style="max-width: 600px;">';
+		foreach ($categorias['results'] as $cat){
+			$subcats = Categoria::getAllListSubcategoria($cat->categoria_id);
+			foreach ($subcats['results'] as $subcat){
+				$select .= '<option value="'.$subcat->categoria_id.'"';
+				if (in_array($subcat->categoria_id, $selected))$select .= ' selected="selected" ';
+				$select .= '>'.$cat->nombre.' > '.$subcat->nombre.'</option>';
+			}
+		}
+		$select .= '</select>';
+		return $select;
+	}
 }
 ?>
