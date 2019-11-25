@@ -26,30 +26,37 @@ class Producto{
 	}
 
 	public static function getById( $producto_id ) {
-	    $result = ConnectionFactory::getFactory()->getByArray("producto", array("producto_id"), array($producto_id), "Producto");
-	    return $result["object"];
+		$result = ConnectionFactory::getFactory()->getByArray("producto", array("producto_id"), array($producto_id), "Producto");
+		return $result["object"];
+	}
+
+	public static function getByUrl($url) {
+		$result = ConnectionFactory::getFactory()->getByArray("producto", array("url","eliminado"), array($url,0), "Producto");
+		return $result["object"];
 	}
 
 	public static function getList($page) {
-	    $rows = getAdminCookieValue("PRODS_PER_PAGE");
-	    if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
-	    $limit1 = ($page-1)*$rows;
-	    $limit2 = $rows;
-	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0"), null );
-	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+		$rows = getAdminCookieValue("PRODS_PER_PAGE");
+		if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
+		$limit1 = ($page-1)*$rows;
+		$limit2 = $rows;
+		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0"), null );
+		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
 
 	public static function getAllList() {
-	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", null, null, null );
-	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", null, null, null );
+		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
 
 	public function delete() {
-	    $result = ConnectionFactory::getFactory()->delete("producto", "producto_id", $this->producto_id);
+		$result = ConnectionFactory::getFactory()->delete("producto", "producto_id", $this->producto_id);
+		$this->eliminado = 1;
+		$this->updateFields(array("eliminado"));
 	}
 
 	public function deleteAll() {
-	    ConnectionFactory::getFactory()->executeStmtNotGet("delete from producto");
+		ConnectionFactory::getFactory()->executeStmtNotGet("delete from producto");
 	}
 
 	public function validateBeforeInsert(){
@@ -61,13 +68,19 @@ class Producto{
 	}
 
 	public function insert() {
-	    $error = $this->validateBeforeInsert();
+		$error = $this->validateBeforeInsert();
 		$id = "0";
-	    if (!$error){
+		if (!$error){
+			if (isset($_FILES["foto"]) && isset($_FILES["foto"]["tmp_name"]) && $_FILES["foto"]["tmp_name"] != ""){
+				$photo9 = returnEncryptedName($_FILES["foto"]["name"],generateRandomString());
+			}else $photo9 = null;
+			$this->foto = $photo9;
+
 			$fields = array("vendedor_id","nombre","precio","descuento","foto","duracion","descripcion","eliminado","categorias");
 			$result = ConnectionFactory::getFactory()->insert($this, "producto", $fields);
 			if ($result["error"]) $error = array($result["error"]);
 			$id = $result["id"];
+			if (isset($photo9) && $photo9 != null && $photo9 != "" && $id != "0") saveImageToPath(PRODUCTOS_PATH,$photo9,'foto',null);
 		}
 		return array("error" => $error, "id" => $id);
 	}
@@ -75,16 +88,50 @@ class Producto{
 	public function update() {
 		if ( is_null( $this->producto_id ) ) trigger_error ( "Update error", E_USER_ERROR );
 		$error = $this->validateBeforeInsert();
-	    if (!$error){
+		if (!$error){
+			if (isset($_FILES["foto2"]) && isset($_FILES["foto2"]["tmp_name"]) && $_FILES["foto2"]["tmp_name"] != ""){
+				$photo9 = returnEncryptedName($_FILES["foto2"]["name"],generateRandomString());
+				$old9 = Producto::getById($this->producto_id);
+			}else $photo9 = $this->foto;
+			$this->foto = $photo9;
+
 			$fields = array("vendedor_id","nombre","precio","descuento","foto","duracion","descripcion","eliminado","categorias");
 			$error = ConnectionFactory::getFactory()->update($this, "producto", $fields, "producto_id");
 			if ($error) $error = array($error);
+			if (isset($photo9) && $photo9 != null && $photo9 != "" && isset($old9)) saveImageToPath(PRODUCTOS_PATH,$photo9,'foto2',$old9->foto);
 		}
-	    return array("error" => $error, "id" => $this->producto_id);
+		return array("error" => $error, "id" => $this->producto_id);
 	}
 
 	public function updateFields($fields) {
 		ConnectionFactory::getFactory()->update($this, "producto", $fields, "producto_id");
 	}
+
+	public static function getProductosSelect($name, $selected){
+		$productos = Producto::getAllList();
+		$select = '<select class="select2" id="'.$name.'" name="'.$name.'" style="max-width: 600px;"><option></option>';
+		foreach ($productos['results'] as $prod){
+			$select .= '<option value="'.$prod->producto_id.'"';
+			if ($prod->producto_id == $selected)$select .= ' selected="selected" ';
+			$select .= '>'.$prod->nombre.'</option>';
+		}
+		$select .= '</select>';
+		return $select;
+	}
+
+	public static function getProductosSelectAllowed($name, $selected, $allowed){
+		$productos = Producto::getAllList();
+		$select = '<select class="pid" name="'.$name.'" style="max-width: 300px;"><option></option>';
+		foreach ($productos['results'] as $prod){
+			if (in_array($prod->producto_id, $allowed)){
+				$select .= '<option value="'.$prod->producto_id.'"';
+				if ($prod->producto_id == $selected)$select .= ' selected="selected" ';
+				$select .= '>'.$prod->nombre.'</option>';
+			}
+		}
+		$select .= '</select>';
+		return $select;
+	}
+
 }
 ?>

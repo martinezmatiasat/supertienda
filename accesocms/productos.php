@@ -40,7 +40,7 @@ function cropImage($results) {
 	} else {
 		$image = Producto::getById( $_GET["id"] );
 		if (isset($_GET["n"]) && $_GET["n"] == 5) {
-            $results["x"] = 800;
+         $results["x"] = 800;
 			$results["y"] = 1000;
 			$results["image"] = $image->foto;
 			$results["imageUrl"] = IMAGES_PATH_HTML.$image->foto;
@@ -55,6 +55,7 @@ function addEditProductoObject($results) {
 	$results["formAction"] = $_GET["action"];
   	if (isset( $_POST["saveChanges"])) {
     	$producto = new Producto( $_POST );
+		$producto->categorias = implode(',', getVar('categorias', array()));
     	if ($producto->producto_id == "") $error = $producto->insert();
     	else $error = $producto->update();
     	if ($error["error"] == false){
@@ -80,9 +81,14 @@ function returnProductoError($error,$results){
 }
 
 function deleteProducto() {
-	if ( !$producto = Producto::getById(isset($_GET["id"]) ? $_GET["id"] : "")) {
+	/* if ( !$producto = Producto::getById(isset($_GET["id"]) ? $_GET["id"] : "")) {
 		header( "Location: productos.php?error=productoNotFound" );
 		exit();
+	} */
+	$ids = isset($_GET["ids"]) ? explode(",", $_GET["ids"]) : array();
+	foreach ($ids as $id) {
+		$producto = Producto::getById($id);
+		if ($producto) $producto->delete();
 	}
 	$producto->delete();
 	header( "Location: productos.php?status=productoDeleted" );
@@ -223,7 +229,7 @@ function addEditProducto($results){
 							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"PRODUCTO_COL_ELIMINADO") ?></label>
 							<div class="col-sm-9 col-md-9 col-lg-10">
 								<div class="checkbox">
-									<label><input type="checkbox" name="destacada" value="1"  <?php echo $results["producto"]->eliminado ? "checked" : "" ?>  /></label>
+									<label><input type="checkbox" name="eliminado" value="1"  <?php echo $results["producto"]->eliminado ? "checked" : "" ?>  /></label>
 								</div>
 							</div>
 						</div>
@@ -265,7 +271,6 @@ function listProductos($results){
 				<a class="btn btn-sm btn-dark-green" href="productos.php?action=new"><?php echo showLang($lang,"PRODUCTO_ADD") ?></a>
 				<div class="widget-box with-table">
 					<div class="widget-content nopadding">
-						<form action="productos.php" method="post">
 							<table class="table table-bordered table-striped table-hover table-condensed ">
 								<thead>
 									<tr>
@@ -279,7 +284,6 @@ function listProductos($results){
 										<th><?php echo showLang($lang,"CROP") ?></th>
 										<th><?php echo showLang($lang,"PRODUCTO_COL_DURACION") ?></th>
 										<th><?php echo showLang($lang,"PRODUCTO_COL_DESCRIPCION") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_ELIMINADO") ?></th>
 										<th><?php echo showLang($lang,"PRODUCTO_COL_CATEGORIAS") ?></th>
 										<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
 									</tr>
@@ -294,7 +298,7 @@ function listProductos($results){
 											<td><?php echo $a->precio ?></td>
 											<td><?php echo $a->descuento ?></td>
 											<td>
-												<?php list($url,$size) = returnThumbnailImage($a->foto,IMAGES_PATH_HTML,IMAGES_PATH,100,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg'); ?>
+												<?php list($url,$size) = returnThumbnailImage($a->foto,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,100,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg'); ?>
 												<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
 											</td>
 											<td>
@@ -302,13 +306,10 @@ function listProductos($results){
 												<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
 												<br><a href="productos.php?action=crop&id=<?php echo $a->producto_id ?>&n=5"><?php echo showLang($lang, "CROP") ?></a>
 											</td>
+
 											<td><?php echo $a->duracion ?></td>
 											<td><?php echo $a->descripcion ?></td>
-											<td><?php echo $a->eliminado ?></td>
-											<td>
-												<?php list($url,$size) = returnThumbnailImage($a->categorias,IMAGES_PATH_HTML,IMAGES_PATH,100,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg'); ?>
-												<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
-											</td>
+											<td><?php echo $a->categorias ?></td>
 											<td align="center" width="100px">
 												<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="productos.php?action=edit&amp;id=<?php echo $a->producto_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><i class="fa fa-pencil-alt"></i></a>
 												<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" class="tip-top delete" data-txt="<?php echo showLang($lang, 'PRODUCTO_DELETE_CONFIRM') ?>" data-href="productos.php?action=delete&amp;ids=<?php echo $a->producto_id ?>">
@@ -327,7 +328,6 @@ function listProductos($results){
 							|
 							<a class="btn btn-sm btn-danger delete-selected" data-href="productos.php?action=delete" data-txt="<?php echo showLang($lang,"DELETE_SELECTED_TXT") ?>"><?php echo showLang($lang,"DELETE_SELECTED") ?></a>
 							<a class="btn btn-sm btn-danger delete-selected" data-href="productos.php?action=deleteAll" data-txt="<?php echo showLang($lang,"DELETE_ALL_TXT") ?>"><?php echo showLang($lang,"DELETE_ALL") ?></a>
-						</form>
 					</div>
 				</div>
 			</div>
