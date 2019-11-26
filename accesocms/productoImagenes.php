@@ -146,7 +146,6 @@ function listProductoImagens($results){
 									<th width="40px" align="center"></th>
 									<th width="40px" align="center"></th>
 									<th><?php echo showLang($lang,"PRODUCTO_IMAGEN_COL_IMAGEN") ?></th>
-									<th><?php echo showLang($lang,"CROP") ?></th>
 									<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
 								</tr>
 							</thead>
@@ -165,11 +164,6 @@ function listProductoImagens($results){
 									<td>
 										<?php list($url,$size) = returnThumbnailImage($a->imagen,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,100,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg'); ?>
 										<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
-									</td>
-									<td>
-										<?php list($url,$size) = returnThumbnailImage($a->imagen,PRODUCTOS_PATH_HTML."crop2/",PRODUCTOS_PATH."crop2/",100,100,"",""); ?>
-										<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
-										<br><a href="productoImagenes.php?action=crop&id=<?php echo $a->producto_imagen_id ?>&n=2&pid=<?php echo getVar('pid') ?>"><?php echo showLang($lang, "CROP") ?></a>
 									</td>
 									<td align="center" width="100px">
 					        			<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" href="javascript:if(confirm('<?php echo $lang['PRODUCTO_IMAGEN_DELETE_CONFIRM'] ?>')) location.href = 'productoImagenes.php?action=delete&amp;id=<?php echo $a->producto_imagen_id ?>&pid=<?php echo getVar('pid') ?>'">

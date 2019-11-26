@@ -56,17 +56,22 @@ ob_start("callback");
 		<div id="sidebar">
 			<ul>
 				<li><a href="index.php"><i class="fa fa-home"></i> <span><?php echo showLang($lang, 'MENU_DASHBOARD') ?></span></a></li>
+				<?php 
+				////SOLO SE VE SI NO ES VENDEDOR, O SEA SUPERADMIN
+				if (!VENDEDOR){ ?>
 				<li><a href="administradores.php"><i class="fa fa-user"></i> <span><?php echo showLang($lang, 'MENU_USERS') ?></span></a></li>
 				<li><a href="vendedores.php"><i class="fas fa-user-tie"></i> <span><?php echo showLang($lang, 'HEADER_VENDEDOR') ?></span></a></li>
-				<li><a href="productos.php"><i class="fas fa-list"></i> <span><?php echo showLang($lang, 'HEADER_PRODUCTO') ?></span></a></li>
-				<li><a href="producto_imagenes.php"><i class="fas fa-list"></i> <span><?php echo showLang($lang, 'HEADER_PRODUCTO_IMAGEN') ?></span></a></li>
 				<li><a href="categorias.php"><i class="fa fa-user"></i> <span>Categor&iacute;as</span></a></li>
 				<li class="submenu"><a href="#"><i class="fa fa-folder-open"></i><span><?php echo showLang($lang, 'MENU_OTHERS') ?></span> <i class="arrow fa fa-chevron-right"></i></a>
 					<ul>
-						<li><a href="metaTags.php"><?php echo showLang($lang, 'MENU_META_TAGS') ?></a></li>
 						<li><a href="variables.php"><?php echo showLang($lang, 'MENU_VARIABLES') ?></a></li>
 					</ul>
 				</li>
+				<?php }else { 
+				    ////SOLO SE VE SI ES VENDEDOR
+				?>
+				<li><a href="productos.php"><i class="fas fa-list"></i> <span><?php echo showLang($lang, 'HEADER_PRODUCTO') ?></span></a></li>
+				<?php } ?>
 			</ul>
 		</div>
 		<div id="content">

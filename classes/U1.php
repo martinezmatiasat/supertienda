@@ -42,7 +42,7 @@ class U1{
 		if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
 		$limit1 = ($page-1)*$rows;
 		$limit2 = $rows;
-		$result = ConnectionFactory::getFactory()->getList("u1", "U1", " $limit1,$limit2 ", null, null );
+		$result = ConnectionFactory::getFactory()->getList("u1", "U1", " $limit1,$limit2 ", array("rol is null || rol = 0"), null );
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
 

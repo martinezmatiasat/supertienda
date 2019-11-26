@@ -30,6 +30,7 @@ function addEditU1Object($results) {
 	$results["formAction"] = $_GET["action"];
   	if (isset( $_POST["saveChanges"])) {
     	$u1 = new U1( $_POST );
+    	$u1->rol = 0;
     	if ($u1->u1_id == "") $error = $u1->insert();
     	else $error = $u1->update();
     	if ($error["error"] == false){

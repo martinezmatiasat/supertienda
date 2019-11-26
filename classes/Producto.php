@@ -35,12 +35,12 @@ class Producto{
 		return $result["object"];
 	}
 
-	public static function getList($page) {
+	public static function getList($page, $vid) {
 		$rows = getAdminCookieValue("PRODS_PER_PAGE");
 		if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
 		$limit1 = ($page-1)*$rows;
 		$limit2 = $rows;
-		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0"), null );
+		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0", "vendedor_id = $vid"), null );
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
 

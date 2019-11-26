@@ -5,18 +5,6 @@ $extra = ExtraVariables::getListByModules(array(1));
 
 if (isset($_POST["saveChanges"])){
 	set_time_limit(0);
-	///FAVICON
-	if (isset($_FILES["favicon"]["tmp_name"]) && $_FILES["favicon"]["tmp_name"] && $_FILES["favicon"]["tmp_name"] != ''){
-		$tmp_name = $_FILES["favicon"]["tmp_name"];
-		$name = $_FILES["favicon"]["name"];
-		move_uploaded_file($tmp_name, '../favicon.ico');
-	}	
-	///LOGO
-	if (isset($_FILES["logo"]["tmp_name"]) && $_FILES["logo"]["tmp_name"] && $_FILES["logo"]["tmp_name"] != ''){
-		$tmp_name = $_FILES["logo"]["tmp_name"];
-		$name = $_FILES["logo"]["name"];
-		move_uploaded_file($tmp_name, '../images/logo.png');
-	}
 	
 	if (isset($_POST['extra'])){
 		$extra = $_POST['extra'];
@@ -71,58 +59,6 @@ function callback($buffer){}
 				<!--  //////////  -->
 				<div class="widget-box collapsible">
 					<div class="widget-title">
-						<a href="#collapse1" data-toggle="collapse">
-							<span class="icon"><i class="fa fa-align-justify"></i></span>
-							<h5><?php echo showLang($lang, 'SYSTEM_IMAGES') ?></h5>
-						</a>
-					</div>
-					<div class="collapse" id="collapse1">
-						<div class="widget-content">
-							<div class="form-group">
-								<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang, 'SYSTEM_FAVICON') ?></label>
-								<div class="col-sm-9 col-md-9 col-lg-10">
-									<?php if (file_exists(WEB_PATH.'favicon.ico')){?>
-										<img class="imageOnForm" alt="favicon" src="<?php echo WEB_PATH_HTML.'favicon.ico' ?>">
-									<?php } ?>
-									<input type="file" name="favicon">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang, 'SYSTEM_LOGO') ?></label>
-								<div class="col-sm-9 col-md-9 col-lg-10">
-									<?php if (file_exists(IMAGES_PATH.'logo.png')){
-										$size = GetThumbnailSize(IMAGES_PATH.'logo.png', 100, 100);
-									?>
-										<img width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>" class="imageOnForm" alt="logo" src="<?php echo IMAGES_PATH_HTML.'logo.png?rand='.rand(0, 100); ?>">
-									<?php } ?>
-									<input type="file" name="logo">
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--  //////////  -->
-				<div class="widget-box collapsible">
-					<div class="widget-title">
-						<a href="#collapse2" data-toggle="collapse">
-							<span class="icon"><i class="fa fa-align-justify"></i></span>
-							<h5><?php echo showLang($lang, 'SYSTEM_ADMIN_TITLE') ?></h5>
-						</a>
-					</div>
-					<div class="collapse" id="collapse2">
-						<div class="widget-content">
-							<div class="form-group">
-								<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang, 'SYSTEM_ADMIN_LANGUAGE') ?></label>
-								<div class="col-sm-9 col-md-9 col-lg-10">
-									<input type="text" class="form-control input-sm" name="ADMIN_LANGUAGE"  value="<?php echo ADMIN_LANGUAGE ?>"/>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--  //////////  -->
-				<div class="widget-box collapsible">
-					<div class="widget-title">
 						<a href="#collapse3" data-toggle="collapse">
 							<span class="icon"><i class="fa fa-align-justify"></i></span>
 							<h5><?php echo showLang($lang, 'SYSTEM_FRONT_TITLE') ?></h5>
@@ -137,37 +73,6 @@ function callback($buffer){}
 							<div class="form-group">
 								<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang, 'SYSTEM_CONTACT_EMAIL') ?></label>
 								<div class="col-sm-9 col-md-9 col-lg-10"><input class="form-control input-sm" name="CONTACT_EMAIL" value="<?php echo CONTACT_EMAIL ?>"></div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang, 'SYSTEM_FRONT_LANGUAGE') ?></label>
-								<div class="col-sm-9 col-md-9 col-lg-10"><input class="form-control input-sm" name="FRONT_LANGUAGE" value="<?php echo FRONT_LANGUAGE ?>"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--  //////////  -->
-				<div class="widget-box collapsible">
-					<div class="widget-title">
-						<a href="#collapse4" data-toggle="collapse">
-							<span class="icon"><i class="fa fa-align-justify"></i></span>
-							<h5><?php echo showLang($lang, 'SYSTEM_COMMON_VARIABLES') ?></h5>
-						</a>
-					</div>
-					<div class="collapse" id="collapse4">
-						<div class="widget-content">
-							<div class="form-group">
-								<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang, 'SYSTEM_DATETIME_FORMAT') ?></label>
-								<div class="col-sm-9 col-md-9 col-lg-10">
-									<input class="form-control input-sm" name="DATETIME_FORMAT" value="<?php echo DATETIME_FORMAT ?>">
-									<a class="infoText" href="http://php.net/manual/es/function.date.php" target="_blanck"><?php echo showLang($lang, 'SYSTEM_EXAMPLES_LINK') ?></a>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang, 'SYSTEM_DATE_FORMAT') ?></label>
-								<div class="col-sm-9 col-md-9 col-lg-10">
-									<input class="form-control input-sm" name="DATE_FORMAT" value="<?php echo DATE_FORMAT ?>">
-									<a class="infoText" href="http://php.net/manual/es/function.date.php" target="_blanck"><?php echo showLang($lang, 'SYSTEM_EXAMPLES_LINK') ?></a>
-								</div>
 							</div>
 						</div>
 					</div>
