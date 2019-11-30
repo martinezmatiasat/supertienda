@@ -2,16 +2,13 @@
 require_once "header.php";
 $results = array();
 $results["lang"] = $lang;
-
 if (isset($_GET["rows"])) setAdminCookieValue("PRODS_PER_PAGE", $_GET["rows"]);
 if (isset($_GET["rows"])){
 	$url ="?"; foreach ($_GET as $n => $val){if ($n!="rows" && $n!="page") $url .= "$n=$val&";}
 	header( "Location: productos.php".substr($url, 0, -1) );
 	exit();
 }
-
 function callback($buffer){}
-
 $action = isset( $_GET["action"] ) ? $_GET["action"] : "";
 switch ( $action ) {
 	case "crop":
@@ -30,11 +27,9 @@ switch ( $action ) {
 	default:
     	listProducto($results);
 }
-
 function cropImage($results) {
 	$results["pageTitle"] = showLang($results["lang"], "CROP_IMAGE");
 	if ( isset( $_POST["saveChanges"] ) ) {
-
 	} elseif ( isset( $_POST["cancel"] ) ) {
 		header( "Location: productos.php");
 	} else {
@@ -43,18 +38,18 @@ function cropImage($results) {
          $results["x"] = 800;
 			$results["y"] = 1000;
 			$results["image"] = $image->foto;
-			$results["imageUrl"] = IMAGES_PATH_HTML.$image->foto;
-			$results["cropPath"] = IMAGES_PATH."crop".$_GET["n"]."/";
+			$results["imageUrl"] = PRODUCTOS_PATH_HTML.$image->foto;
+			$results["cropPath"] = PRODUCTOS_PATH."crop".$_GET["n"]."/";
 		}
 		cropFotoImage($results);
 	}
 }
-
 function addEditProductoObject($results) {
 	$results["pageTitle"] = showLang($results["lang"], "PRODUCTO_NEW");
 	$results["formAction"] = $_GET["action"];
   	if (isset( $_POST["saveChanges"])) {
     	$producto = new Producto( $_POST );
+    	$producto->vendedor_id = VENDEDOR_ID;
 		$producto->categorias = implode(',', getVar('categorias', array()));
     	if ($producto->producto_id == "") $error = $producto->insert();
     	else $error = $producto->update();
@@ -73,13 +68,11 @@ function addEditProductoObject($results) {
     	addEditProducto($results);
   	}
 }
-
 function returnProductoError($error,$results){
   	$results["error"] = $error;
   	$results["producto"] = new Producto( $_POST );
 	return $results;
 }
-
 function deleteProducto() {
 	/* if ( !$producto = Producto::getById(isset($_GET["id"]) ? $_GET["id"] : "")) {
 		header( "Location: productos.php?error=productoNotFound" );
@@ -93,19 +86,13 @@ function deleteProducto() {
 	$producto->delete();
 	header( "Location: productos.php?status=productoDeleted" );
 }
-
 function deleteAllProducto() {
     Producto::deleteAll();
     header( "Location: productos.php?status=productoDeleted" );
     exit();
 }
-
 function listProducto($results) {
-	$data = Producto::getAllList();
-	if (isset($_POST["saveChanges"])){
-		header( "Location: productos.php?status=changesSaved" );
-		exit();
-	}
+   $data = Producto::getList(getVar('page', 1), VENDEDOR_ID);
 	$results["all"] = $data["results"];
 	$results["totalRows"] = $data["totalRows"];
 	$results["pageTitle"] = $results["lang"]["PRODUCTO_LIST"];
@@ -191,7 +178,7 @@ function addEditProducto($results){
 						<div class="form-group">
 							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"PRODUCTO_COL_DESCUENTO") ?></label>
 							<div class="col-sm-9 col-md-9 col-lg-10  ">
-								<input class="form-control input-sm" placeholder="Porcentaje" type="number" name="descuento" required  value='<?php echo $results["producto"]->precio ?>' step="1"/>
+								<input class="form-control input-sm" placeholder="Descuento" type="number" name="descuento"  value='<?php echo $results["producto"]->descuento ?>' step="1"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -221,18 +208,12 @@ function addEditProducto($results){
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"PRODUCTO_COL_DESCRIPCION") ?></label>
-							<div class="col-sm-9 col-md-9 col-lg-10">
-								<textarea class="form-control" name="descripcion" ><?php echo $results["producto"]->descripcion ?></textarea>
-							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"PRODUCTO_COL_ELIMINADO") ?></label>
-							<div class="col-sm-9 col-md-9 col-lg-10">
-								<div class="checkbox">
-									<label><input type="checkbox" name="eliminado" value="1"  <?php echo $results["producto"]->eliminado ? "checked" : "" ?>  /></label>
-								</div>
-							</div>
-						</div>
+    						<div class="col-sm-12">
+    							<textarea class="form-control tinymyce" name="descripcion" ><?php echo $results["producto"]->descripcion ?></textarea>
+    						</div>
+    					</div>
 						<div class="form-group">
 							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"PRODUCTO_COL_CATEGORIAS") ?></label>
 							<div class="col-sm-9 col-md-9 col-lg-10  ">
@@ -248,13 +229,14 @@ function addEditProducto($results){
 			</div>
 		</div>
 	</div>
-    <script>getTitle('.titulo input', '.url input');</script>
 </div>
 <?php }?>
 <?php
 // ----------------------------------- LIST PRODUCTO ----------------------------------- //
 function listProductos($results){
 	changeHeaderVariablesAdmin("", "", "", array());
+	$rows = getAdminCookieValue("PRODS_PER_PAGE");
+	if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
 	$lang = $results["lang"]; ?>
 	<div id="content-header" class="mini">
 		<h1><?php echo showLang($lang, $results["pageTitle"]) ?></h1>
@@ -269,71 +251,70 @@ function listProductos($results){
 		<div class="row" id="dropable-images">
 			<div class="col-xs-12">
 				<a class="btn btn-sm btn-dark-green" href="productos.php?action=new"><?php echo showLang($lang,"PRODUCTO_ADD") ?></a>
+				<div class="tableSettings">
+    				<span><?php echo $lang["TABLE_ROWS"] ?></span>
+    				<?php echo rowsPerPageSelect($rows); ?>
+    			</div>
 				<div class="widget-box with-table">
 					<div class="widget-content nopadding">
-							<table class="table table-bordered table-striped table-hover table-condensed ">
-								<thead>
+						<table class="table table-bordered table-striped table-hover table-condensed ">
+							<thead>
+								<tr>
+									<th width="40px"><input type="checkbox" id="select-all"></th>
+									<th><?php echo showLang($lang,"PRODUCTO_COL_NOMBRE") ?></th>
+									<th><?php echo showLang($lang,"PRODUCTO_COL_PRECIO") ?></th>
+									<th><?php echo showLang($lang,"PRODUCTO_COL_DESCUENTO") ?></th>
+									<th><?php echo showLang($lang,"PRODUCTO_COL_FOTO") ?></th>
+									<th><?php echo showLang($lang,"CROP") ?></th>
+									<th><?php echo showLang($lang,"PRODUCTO_COL_DURACION") ?></th>
+									<th>Imagenes</th>
+									<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ( $results["all"] as $num => $a ) { ?>
 									<tr>
-										<th width="40px"><input type="checkbox" id="select-all"></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_PRODUCTO_ID") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_VENDEDOR_ID") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_NOMBRE") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_PRECIO") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_DESCUENTO") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_FOTO") ?></th>
-										<th><?php echo showLang($lang,"CROP") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_DURACION") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_DESCRIPCION") ?></th>
-										<th><?php echo showLang($lang,"PRODUCTO_COL_CATEGORIAS") ?></th>
-										<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php foreach ( $results["all"] as $num => $a ) { ?>
-										<tr>
-											<td align="center"><input type="checkbox" name="ids[]" value="<?php echo $a->producto_id ?>"></td>
-											<td><?php echo $a->producto_id ?></td>
-											<td><?php echo $a->vendedor_id ?></td>
-											<td><?php echo $a->nombre ?></td>
-											<td><?php echo $a->precio ?></td>
-											<td><?php echo $a->descuento ?></td>
-											<td>
-												<?php list($url,$size) = returnThumbnailImage($a->foto,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,100,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg'); ?>
-												<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
-											</td>
-											<td>
-												<?php list($url,$size) = returnThumbnailImage($a->foto,IMAGES_PATH_HTML."crop/",IMAGES_PATH."crop/",100,100,"",""); ?>
-												<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
-												<br><a href="productos.php?action=crop&id=<?php echo $a->producto_id ?>&n=5"><?php echo showLang($lang, "CROP") ?></a>
-											</td>
+										<td align="center"><input type="checkbox" name="ids[]" value="<?php echo $a->producto_id ?>"></td>
+										<td><?php echo $a->nombre ?></td>
+										<td>$<?php echo $a->precio ?></td>
+										<td><?php echo $a->descuento != 0 ? '$'.$a->descuento : '' ?></td>
+										<td>
+											<?php list($url,$size) = returnThumbnailImage($a->foto,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,100,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg'); ?>
+											<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
+										</td>
+										<td>
+											<?php list($url,$size) = returnThumbnailImage($a->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",100,100,"",""); ?>
+											<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
+											<br><a href="productos.php?action=crop&id=<?php echo $a->producto_id ?>&n=5"><?php echo showLang($lang, "CROP") ?></a>
+										</td>
 
-											<td><?php echo $a->duracion ?></td>
-											<td><?php echo $a->descripcion ?></td>
-											<td><?php echo $a->categorias ?></td>
-											<td align="center" width="100px">
-												<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="productos.php?action=edit&amp;id=<?php echo $a->producto_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><i class="fa fa-pencil-alt"></i></a>
-												<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" class="tip-top delete" data-txt="<?php echo showLang($lang, 'PRODUCTO_DELETE_CONFIRM') ?>" data-href="productos.php?action=delete&amp;ids=<?php echo $a->producto_id ?>">
-													<i class="far fa-trash-alt"></i>
-												</a>
-											</td>
-										</tr>
-									<?php } ?>
-								</tbody>
-							</table>
-							<div class="pull-right">
-								<button type="submit" class="btn btn-dark-green btn-sm" name="saveChanges"><?php echo showLang($lang, "SAVE_CHANGES") ?></button>
-							</div>
-							<div class="clearfix"></div>
-							<a class="btn btn-sm btn-dark-green" href="productos.php?action=new"><?php echo showLang($lang,"PRODUCTO_ADD") ?></a>
-							|
-							<a class="btn btn-sm btn-danger delete-selected" data-href="productos.php?action=delete" data-txt="<?php echo showLang($lang,"DELETE_SELECTED_TXT") ?>"><?php echo showLang($lang,"DELETE_SELECTED") ?></a>
-							<a class="btn btn-sm btn-danger delete-selected" data-href="productos.php?action=deleteAll" data-txt="<?php echo showLang($lang,"DELETE_ALL_TXT") ?>"><?php echo showLang($lang,"DELETE_ALL") ?></a>
+										<td><?php echo $a->duracion ?>hs</td>
+										<td><a href="productoImagenes.php?pid=<?php echo $a->producto_id ?>">Imagenes</a></td>
+										<td align="center" width="100px">
+											<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="productos.php?action=edit&amp;id=<?php echo $a->producto_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><i class="fa fa-pencil-alt"></i></a>
+											<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" class="tip-top delete" data-txt="<?php echo showLang($lang, 'PRODUCTO_DELETE_CONFIRM') ?>" data-href="productos.php?action=delete&amp;ids=<?php echo $a->producto_id ?>">
+												<i class="far fa-trash-alt"></i>
+											</a>
+										</td>
+									</tr>
+								<?php } ?>
+							</tbody>
+						</table>
 					</div>
 				</div>
+				<div id="pagination">
+    				<ul class="pagination alternate">
+    					<?php $url ="?"; foreach ($_GET as $n => $val){if ($n!="page") $url .= "$n=$val&";} ?>
+    					<?php echo showAdminPagination($rows,$results["totalRows"],$url,isset($_GET["page"]) ? $_GET["page"] : "1", $lang); ?>
+    				</ul>
+    			</div>
+    			<script>rowsPerPage();</script>
+				<a class="btn btn-sm btn-dark-green" href="productos.php?action=new"><?php echo showLang($lang,"PRODUCTO_ADD") ?></a>
+				|
+				<a class="btn btn-sm btn-danger delete-selected" data-href="productos.php?action=delete" data-txt="<?php echo showLang($lang,"DELETE_SELECTED_TXT") ?>"><?php echo showLang($lang,"DELETE_SELECTED") ?></a>
 			</div>
 		</div>
 	</div>
-	<script>multipleUpload("ajax/upload-image-producto.php")</script>
 <?php } ?>
 
 <?php require dirname(__FILE__)."/footer.php"; ?>

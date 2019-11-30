@@ -22,6 +22,11 @@ class Categoria{
 	    return $result["object"];
 	}
 
+	public static function getDestacados() {
+		$result = ConnectionFactory::getFactory()->getList("categoria", "Categoria", null, array("destacada = 1"), null );
+		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+	}
+
 	public static function getAllList() {
 	    $result = ConnectionFactory::getFactory()->getList("categoria", "Categoria", null, null, "orden" );
 	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));

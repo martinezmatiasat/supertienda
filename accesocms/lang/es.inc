@@ -7,7 +7,7 @@ $lang = array(
 	'DELETE_TITLE' => 'Eliminar',
 	'DELETE_SELECTED' => 'Eliminar Seleccionados',
 	'DELETE_ALL' => 'Eliminar Todos',
-	'DELETE_SELECTED_TXT' => 'Esta seguro de eliminar todos los items seleccionados?',
+	'DELETE_SELECTED_TXT' => 'Esta seguro de eliminar los items seleccionados?',
 	'DELETE_ALL_TXT' => 'Esta seguro de eliminar todos los items?',
 	'YES' => 'Si',
 	'NO' => 'No',
@@ -170,9 +170,9 @@ $lang = array(
 	"PRODUCTO_COL_CATEGORIAS" => "Categorias",
 
 	//PRODUCTO_IMAGEN
-	"HEADER_PRODUCTO_IMAGEN" => "Imagenes de productos",
-	"PRODUCTO_IMAGEN_NEW" => "Nuevo Producto Imagen",
-	"PRODUCTO_IMAGEN_EDIT" => "Editar Producto Imagen",
+	"HEADER_PRODUCTO_IMAGEN" => "Imagenes del producto",
+	"PRODUCTO_IMAGEN_NEW" => "Nueva Imagen",
+	"PRODUCTO_IMAGEN_EDIT" => "Editar Imagen",
 	"PRODUCTO_IMAGEN_LIST" => "Producto Imagens",
 	"PRODUCTO_IMAGEN_NOT_FOUND" => "Error: Producto Imagen no encontrado.",
 	"PRODUCTO_IMAGEN_DELETED" => "Producto Imagen Eliminado.",

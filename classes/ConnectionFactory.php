@@ -133,6 +133,30 @@ class ConnectionFactory{
 		return array('error' => $error, 'list' => $list, 'totalRows' => $totalRows);
 	}
 
+	public function getRandomList($table, $class, $limit = 1){
+		$error = false;
+		$object = null;
+		$totalRows = 0;
+		$mysqli = $this->db;
+		$list = array();
+		try {
+			$stmt = "select * from $table order by rand()";
+			if ($limit && $limit != '') {
+				$stmt .= ' limit '.$limit;
+			}
+
+			ConnectionFactory::writeLog($stmt);
+			if ($result = $mysqli->query($stmt)) {
+				while ($row = $result->fetch_assoc()) $list[] = new $class($row);
+    			$result->free();
+			} else $error = $mysqli->error;
+
+		}catch (Exception $e){
+			$error = $e->getMessage();
+		}
+		return array('error' => $error, 'list' => $list);
+	}
+
 	public function executeStmt($stmt, $class = null){
 		$error = false;
 		$object = null;

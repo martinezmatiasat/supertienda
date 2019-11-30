@@ -2,18 +2,16 @@
 require_once "header.php";
 $results = array();
 $results["lang"] = $lang;
-
 if (isset($_GET["rows"])) setAdminCookieValue("ADMINS_PER_PAGE", $_GET["rows"]);
 if (isset($_GET["rows"])){
 	$url ="?"; foreach ($_GET as $n => $val){if ($n!="rows" && $n!="page") $url .= "$n=$val&";}
 	header( "Location: administradores.php".substr($url, 0, -1) );
 	exit();
 }
-
 function callback($buffer){}
-			
+
 $action = isset( $_GET["action"] ) ? $_GET["action"] : "";
-switch ( $action ) { 
+switch ( $action ) {
 	case "new":
 	case "edit":
 	    addEditU1Object($results);
@@ -24,19 +22,19 @@ switch ( $action ) {
 	default:
     	listU1($results);
 }
-
 function addEditU1Object($results) {
 	$results["pageTitle"] = showLang($results["lang"], "U1_NEW");
 	$results["formAction"] = $_GET["action"];
   	if (isset( $_POST["saveChanges"])) {
     	$u1 = new U1( $_POST );
+    	$u1->rol = 0;
     	if ($u1->u1_id == "") $error = $u1->insert();
     	else $error = $u1->update();
     	if ($error["error"] == false){
     		if ($u1->u1_id != '' && isset($_POST['clave']) && $_POST['clave'] != ''){
     			$u1->clave = sha1($_POST['clave']);
     			$u1->updateFields(array("clave"));
-    		}    		
+    		}
 	    	header( "Location: administradores.php?status=changesSaved&page=".(isset($_GET["page"]) ? $_GET["page"] : 1));
     	}else{
 	    	$results = returnU1Error($error["error"],$results);
@@ -51,13 +49,11 @@ function addEditU1Object($results) {
     	addEditU1($results);
   	}
 }
-
 function returnU1Error($error,$results){
   	$results["error"] = $error;
   	$results["u1"] = new U1( $_POST );
 	return $results;
 }
-
 function deleteU1() {
 	if ( !$u1 = U1::getById(isset($_GET["id"]) ? $_GET["id"] : "")) {
 		header( "Location: administradores.php?error=u1NotFound" );
@@ -66,7 +62,6 @@ function deleteU1() {
 	$u1->delete();
 	header( "Location: administradores.php?status=u1Deleted" );
 }
-
 function listU1($results) {
 	$page = (isset($_GET["page"])) ? (int)($_GET["page"]) : 1;
 	$data = U1::getList($page);
@@ -91,10 +86,10 @@ function addEditU1($results){
 <div id="content-header" class="mini">
 	<h1><?php echo showLang($lang, $results["pageTitle"]) ?></h1>
 	<div id="breadcrumb">
-		<a href="#" title="<?php echo showLang($lang, "HOME_BREADCRUM") ?>" class="tip-bottom"><i class="fa fa-home"></i> <?php echo showLang($lang, "HOME_HOME") ?></a> 
+		<a href="#" title="<?php echo showLang($lang, "HOME_BREADCRUM") ?>" class="tip-bottom"><i class="fa fa-home"></i> <?php echo showLang($lang, "HOME_HOME") ?></a>
 		<a href="administradores.php" class="current"><?php echo showLang($lang,"HEADER_U1") ?></a>
 		<a href="#" class="current"><?php echo showLang($lang, $results["pageTitle"]) ?></a>
-	</div>	
+	</div>
 </div>
 <div class="container-fluid">
 	<?php if (isset($results["error"])){ ?>
@@ -129,7 +124,7 @@ function addEditU1($results){
 							</div>
 						</div>
 						<div class="form-actions">
-							<button type="submit" class="btn btn-dark-green btn-sm" name="saveChanges"><?php echo showLang($lang, "SAVE_CHANGES") ?></button> 
+							<button type="submit" class="btn btn-dark-green btn-sm" name="saveChanges"><?php echo showLang($lang, "SAVE_CHANGES") ?></button>
 							<a class="btn btn-primary btn-sm" href="administradores.php?page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><?php echo showLang($lang, "CANCEL_CHANGES") ?></a>
 						</div>
 					</form>
@@ -143,16 +138,16 @@ function addEditU1($results){
 <?php
 // ----------------------------------- LIST U1 ----------------------------------- //
 function listU1s($results){
-	changeHeaderVariablesAdmin("", "", "", array()); 
+	changeHeaderVariablesAdmin("", "", "", array());
 $rows = getAdminCookieValue("ADMINS_PER_PAGE");
 	if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
 	$lang = $results["lang"]; ?>
 <div id="content-header" class="mini">
 	<h1><?php echo showLang($lang, $results["pageTitle"]) ?></h1>
 	<div id="breadcrumb">
-		<a href="#" title="<?php echo showLang($lang, "HOME_BREADCRUM") ?>" class="tip-bottom"><i class="fa fa-home"></i> <?php echo showLang($lang, "HOME_HOME") ?></a> 
+		<a href="#" title="<?php echo showLang($lang, "HOME_BREADCRUM") ?>" class="tip-bottom"><i class="fa fa-home"></i> <?php echo showLang($lang, "HOME_HOME") ?></a>
 		<a href="#" class="current"><?php echo showLang($lang, $results["pageTitle"]) ?></a>
-	</div>	
+	</div>
 </div>
 <div class="container-fluid">
 	<?php if ( isset( $results["errorMessage"] ) ) { ?><div class="alert alert-danger"><?php echo $results["errorMessage"] ?></div><?php } ?>
@@ -197,7 +192,7 @@ $rows = getAdminCookieValue("ADMINS_PER_PAGE");
 					<?php showAdminPagination($rows,$results["totalRows"],$url,isset($_GET["page"]) ? $_GET["page"] : "1", $lang); ?>
 				</ul>
 			</div>
-			<script>rowsPerPage();</script>		
+			<script>rowsPerPage();</script>
 			<a class="btn btn-dark-green" href="administradores.php?action=new"><?php echo showLang($lang,"U1_ADD") ?></a>
 		</div>
 	</div>

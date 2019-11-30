@@ -2,9 +2,7 @@
 require_once "header.php";
 $results = array();
 $results["lang"] = $lang;
-
 function callback($buffer){}
-
 	$action = isset( $_GET["action"] ) ? $_GET["action"] : "";
 	switch ( $action ) {
 		case "new":
@@ -20,7 +18,6 @@ function callback($buffer){}
 		default:
 			listVendedor($results);
 	}
-
 	function addEditVendedorObject($results) {
 		$results["pageTitle"] = showLang($results["lang"], "VENDEDOR_NEW");
 		$results["formAction"] = $_GET["action"];
@@ -29,7 +26,6 @@ function callback($buffer){}
 			if ($vendedor->vendedor_id == "") $error = $vendedor->insert();
 			else $error = $vendedor->update();
 			if ($error["error"] == false){
-
 				// GENERO EL USUARIO
 				$vendedor = Vendedor::getById($error['id']);
 				if ($vendedor->u1_id == 0){
@@ -54,7 +50,6 @@ function callback($buffer){}
 						$vendedor->updateFields(array("u1_id"));
 					}
 				}
-
 				header( "Location: vendedores.php?status=changesSaved&page=".(isset($_GET["page"]) ? $_GET["page"] : 1));
 			}else{
 				$results = returnVendedorError($error["error"],$results);
@@ -69,13 +64,11 @@ function callback($buffer){}
 			addEditVendedor($results);
 		}
 	}
-
 	function returnVendedorError($error,$results){
 		$results["error"] = $error;
 		$results["vendedor"] = new Vendedor( $_POST );
 		return $results;
 	}
-
 	function deleteVendedor() {
 		$ids = isset($_GET["ids"]) ? explode(",", $_GET["ids"]) : array();
 		foreach ($ids as $id) {
@@ -85,13 +78,11 @@ function callback($buffer){}
 		$vendedor->delete();
 		header( "Location: vendedores.php?status=vendedorDeleted" );
 	}
-
 	function deleteAllVendedor() {
 		Vendedor::deleteAll();
 		header( "Location: vendedores.php?status=vendedorDeleted" );
 		exit();
 	}
-
 	function listVendedor($results) {
 		$data = Vendedor::getAllList();
 		$results["all"] = $data["results"];
@@ -106,7 +97,6 @@ function callback($buffer){}
 		}
 		listVendedors($results);
 	}
-
 	// ----------------------------------- EDIT OR ADD VENDEDOR ----------------------------------- //
 	function addEditVendedor($results){
 		changeHeaderVariablesAdmin("", "", "", array());
@@ -221,7 +211,6 @@ function callback($buffer){}
 								<thead>
 									<tr>
 										<th width="40px"><input type="checkbox" id="select-all"></th>
-										<th><?php echo showLang($lang,"VENDEDOR_COL_VENDEDOR_ID") ?></th>
 										<th><?php echo showLang($lang,"VENDEDOR_COL_NOMBRE") ?></th>
 										<th><?php echo showLang($lang,"VENDEDOR_COL_APELLIDO") ?></th>
 										<th><?php echo showLang($lang,"VENDEDOR_COL_NOMBRE_TIENDA") ?></th>
@@ -229,7 +218,6 @@ function callback($buffer){}
 										<th><?php echo showLang($lang,"VENDEDOR_COL_DIRECCION") ?></th>
 										<th><?php echo showLang($lang,"VENDEDOR_COL_TELEFONO") ?></th>
 										<th><?php echo showLang($lang,"VENDEDOR_COL_MAIL") ?></th>
-										<th><?php echo showLang($lang,"VENDEDOR_COL_U1_ID") ?></th>
 										<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
 									</tr>
 								</thead>
@@ -237,7 +225,6 @@ function callback($buffer){}
 									<?php foreach ( $results["all"] as $num => $a ) { ?>
 										<tr>
 											<td align="center"><input type="checkbox" name="ids[]" value="<?php echo $a->vendedor_id ?>"></td>
-											<td><?php echo $a->vendedor_id ?></td>
 											<td><?php echo $a->nombre ?></td>
 											<td><?php echo $a->apellido ?></td>
 											<td><?php echo $a->nombre_tienda ?></td>
@@ -245,7 +232,6 @@ function callback($buffer){}
 											<td><?php echo $a->direccion ?></td>
 											<td><?php echo $a->telefono ?></td>
 											<td><?php echo $a->mail ?></td>
-											<td><?php echo $a->u1_id ?></td>
 											<td align="center" width="100px">
 												<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="vendedores.php?action=edit&amp;id=<?php echo $a->vendedor_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><i class="fa fa-pencil-alt"></i></a>
 												<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" data-txt="<?php echo showLang($lang, 'VENDEDOR_DELETE_CONFIRM') ?>" data-href="vendedores.php?action=delete&amp;ids=<?php echo $a->vendedor_id ?>">
@@ -261,7 +247,6 @@ function callback($buffer){}
 					<a class="btn btn-sm btn-dark-green" href="vendedores.php?action=new"><?php echo showLang($lang,"VENDEDOR_ADD") ?></a>
 					|
 					<a class="btn btn-sm btn-danger delete-selected" data-href="vendedores.php?action=delete" data-txt="<?php echo showLang($lang,"DELETE_SELECTED_TXT") ?>"><?php echo showLang($lang,"DELETE_SELECTED") ?></a>
-					<a class="btn btn-sm btn-danger delete" data-href="vendedores.php?action=deleteAll" data-txt="<?php echo showLang($lang,"DELETE_ALL_TXT") ?>"><?php echo showLang($lang,"DELETE_ALL") ?></a>
 				</div>
 			</div>
 		</div>

@@ -4,7 +4,6 @@ $results = array();
 $results["lang"] = $lang;
 define ('SID', getVar('sid', 0));
 function callback($buffer){}
-
 $action = isset( $_GET["action"] ) ? $_GET["action"] : "";
 switch ( $action ) {
 	case "crop":
@@ -29,7 +28,6 @@ switch ( $action ) {
 	default:
     	listCategoria($results);
 }
-
 function CategoriaUp($results){
 	$order = $_GET["id"];
 	if ($order > 1){
@@ -38,18 +36,15 @@ function CategoriaUp($results){
 	header( "Location: categorias.php?status=changesSaved&page=".(isset($_GET["page"]) ? $_GET["page"] : 1)."&sid=".SID);
 	exit();
 }
-
 function CategoriaDown($results){
 	$order = $_GET["id"];
 	Categoria::moveDown($order, SID);
 	header( "Location: categorias.php?status=changesSaved&page=".(isset($_GET["page"]) ? $_GET["page"] : 1)."&sid=".SID);
 	exit();
 }
-
 function cropImage($results) {
 	$results["pageTitle"] = showLang($results["lang"], "CROP_IMAGE");
 	if ( isset( $_POST["saveChanges"] ) ) {
-
 	} elseif ( isset( $_POST["cancel"] ) ) {
 		header( "Location: categorias.php");
 	} else {
@@ -64,7 +59,6 @@ function cropImage($results) {
 		cropFotoImage($results);
 	}
 }
-
 function addEditCategoriaObject($results) {
 	$results["pageTitle"] = showLang($results["lang"], "CATEGORIA_NEW");
 	$results["formAction"] = $_GET["action"];
@@ -88,13 +82,11 @@ function addEditCategoriaObject($results) {
     	addEditCategoria($results);
   	}
 }
-
 function returnCategoriaError($error,$results){
   	$results["error"] = $error;
   	$results["categoria"] = new Categoria( $_POST );
 	return $results;
 }
-
 function deleteCategoria() {
     $ids = isset($_GET["ids"]) ? explode(",", $_GET["ids"]) : array();
     foreach ($ids as $id) {
@@ -104,13 +96,11 @@ function deleteCategoria() {
 	$categoria->delete();
 	header( "Location: categorias.php?status=categoriaDeleted" ."&sid=".SID);
 }
-
 function deleteAllCategoria() {
     Categoria::deleteAll();
     header( "Location: categorias.php?status=categoriaDeleted" ."&sid=".SID);
     exit();
 }
-
 function listCategoria($results) {
 	$data = Categoria::getAllListSubcategoria(SID);
 	$results["all"] = $data["results"];
@@ -288,7 +278,7 @@ function listCategorias($results){
 									<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
 									<br><a href="categorias.php?action=crop&id=<?php echo $a->categoria_id ?>&n=3"><?php echo showLang($lang, "CROP") ?></a>
 								</td>
-								<td><?php echo $a->destacada ?></td>
+								<td><i class="fas <?php echo $a->destacada ? 'fa-check text-success' : 'fa-times text-danger' ?> "></i></td>
 								<td align="center" width="100px">
 									<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="categorias.php?action=edit&amp;id=<?php echo $a->categoria_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>&sid=<?php echo SID ?>"><i class="fa fa-pencil-alt"></i></a>
 									<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" data-txt="<?php echo showLang($lang, 'CATEGORIA_DELETE_CONFIRM') ?>" data-href="categorias.php?action=delete&amp;ids=<?php echo $a->categoria_id ?>&sid=<?php echo SID ?>">
@@ -308,7 +298,6 @@ function listCategorias($results){
 			<a class="btn btn-sm btn-dark-green" href="categorias.php?action=new&sid=<?php echo SID ?>"><?php echo showLang($lang,"CATEGORIA_ADD") ?></a>
             |
             <a class="btn btn-sm btn-danger delete-selected" data-href="categorias.php?action=delete&sid=<?php echo SID ?>" data-txt="<?php echo showLang($lang,"DELETE_SELECTED_TXT") ?>"><?php echo showLang($lang,"DELETE_SELECTED") ?></a>
-			<a class="btn btn-sm btn-danger delete" data-href="categorias.php?action=deleteAll&sid=<?php echo SID ?>" data-txt="<?php echo showLang($lang,"DELETE_ALL_TXT") ?>"><?php echo showLang($lang,"DELETE_ALL") ?></a>
 		</div>
 	</div>
 </div>

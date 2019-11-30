@@ -2,7 +2,7 @@
 require_once dirname(__FILE__)."/../../config.php";
 include_once ADMIN_PAGES_PATH."security.php";
 $fileElementName = "fileToUpload";
-$uploadsDir = IMAGES_PATH;
+$uploadsDir = PRODUCTOS_PATH;
 if (!is_dir($uploadsDir)) mkdir($uploadsDir, 0700);
 $items = array();
 foreach ($_FILES[$fileElementName]["name"] as $num => $fileName){
@@ -15,6 +15,7 @@ foreach ($_FILES[$fileElementName]["name"] as $num => $fileName){
 		$fileName = $name;
 		move_uploaded_file($_FILES[$fileElementName]["tmp_name"][$num], "$uploadsDir/$fileName");
 		$test = new ProductoImagen(array("imagen" => $fileName));
+		$test->producto_id = getVar('pid');
 		$test->insert();
 	}
 }

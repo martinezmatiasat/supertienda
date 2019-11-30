@@ -49,8 +49,12 @@ class Producto{
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
 
+	public static function getRandom() {
+		$result = ConnectionFactory::getFactory()->getRandomList("producto", "Producto", 8);
+		return (array("results" => $result["list"]));
+	}
+
 	public function delete() {
-		$result = ConnectionFactory::getFactory()->delete("producto", "producto_id", $this->producto_id);
 		$this->eliminado = 1;
 		$this->updateFields(array("eliminado"));
 	}
@@ -76,6 +80,8 @@ class Producto{
 			}else $photo9 = null;
 			$this->foto = $photo9;
 
+			var_dump($photo9);
+			
 			$fields = array("vendedor_id","nombre","precio","descuento","foto","duracion","descripcion","eliminado","categorias");
 			$result = ConnectionFactory::getFactory()->insert($this, "producto", $fields);
 			if ($result["error"]) $error = array($result["error"]);

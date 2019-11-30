@@ -2,14 +2,11 @@
 require_once "header.php";
 $results = array();
 $results["lang"] = $lang;
-
 if (!Producto::getById(getVar('pid'))){
 	header('Location: productos.php');
 	exit();
 }
-
 function callback($buffer){}
-
 $action = isset( $_GET["action"] ) ? $_GET["action"] : "";
 switch ( $action ) {
 	case "crop":
@@ -27,7 +24,6 @@ switch ( $action ) {
 	default:
     	listProductoImagen($results);
 }
-
 function ProductoImagenUp($results){
 	$order = $_GET["id"];
 	if ($order > 1){
@@ -36,18 +32,15 @@ function ProductoImagenUp($results){
 	header( "Location: productoImagenes.php?status=changesSaved&page=".(isset($_GET["page"]) ? $_GET["page"] : 1)."&pid=".getVar('pid'));
 	exit();
 }
-
 function ProductoImagenDown($results){
 	$order = $_GET["id"];
 	ProductoImagen::moveDown($order, getVar('pid'));
 	header( "Location: productoImagenes.php?status=changesSaved&page=".(isset($_GET["page"]) ? $_GET["page"] : 1)."&pid=".getVar('pid'));
 	exit();
 }
-
 function cropImage($results) {
 	$results["pageTitle"] = showLang($results["lang"], "CROP_IMAGE");
 	if ( isset( $_POST["saveChanges"] ) ) {
-
 	} elseif ( isset( $_POST["cancel"] ) ) {
 		header( "Location: productoImagenes.php");
 	} else {
@@ -62,7 +55,6 @@ function cropImage($results) {
 		cropFotoImage($results);
 	}
 }
-
 function deleteProductoImagen() {
 	if ( !$producto_imagen = ProductoImagen::getById(isset($_GET["id"]) ? $_GET["id"] : "")) {
 		header( "Location: productoImagenes.php?error=producto_imagenNotFound"."&pid=".getVar('pid'));
@@ -71,7 +63,6 @@ function deleteProductoImagen() {
 	$producto_imagen->delete();
 	header( "Location: productoImagenes.php?status=producto_imagenDeleted"."&pid=".getVar('pid'));
 }
-
 function listProductoImagen($results) {
 	$data = ProductoImagen::getAllList(getVar('pid'));
 	$results["all"] = $data["results"];
@@ -146,7 +137,6 @@ function listProductoImagens($results){
 									<th width="40px" align="center"></th>
 									<th width="40px" align="center"></th>
 									<th><?php echo showLang($lang,"PRODUCTO_IMAGEN_COL_IMAGEN") ?></th>
-									<th><?php echo showLang($lang,"CROP") ?></th>
 									<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
 								</tr>
 							</thead>
@@ -165,11 +155,6 @@ function listProductoImagens($results){
 									<td>
 										<?php list($url,$size) = returnThumbnailImage($a->imagen,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,100,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg'); ?>
 										<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
-									</td>
-									<td>
-										<?php list($url,$size) = returnThumbnailImage($a->imagen,PRODUCTOS_PATH_HTML."crop2/",PRODUCTOS_PATH."crop2/",100,100,"",""); ?>
-										<?php if ($url && $url != ""){ ?><img src="<?php echo $url ?>" width="<?php echo $size[0] ?>" height="<?php echo $size[1] ?>"><?php } ?>
-										<br><a href="productoImagenes.php?action=crop&id=<?php echo $a->producto_imagen_id ?>&n=2&pid=<?php echo getVar('pid') ?>"><?php echo showLang($lang, "CROP") ?></a>
 									</td>
 									<td align="center" width="100px">
 					        			<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" href="javascript:if(confirm('<?php echo $lang['PRODUCTO_IMAGEN_DELETE_CONFIRM'] ?>')) location.href = 'productoImagenes.php?action=delete&amp;id=<?php echo $a->producto_imagen_id ?>&pid=<?php echo getVar('pid') ?>'">
