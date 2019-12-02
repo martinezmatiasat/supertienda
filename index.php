@@ -4,10 +4,6 @@
 
 $categorias = Categoria::getDestacados();
 $productos = Producto::getRandom();
-//$listaProd=$productos['results'];
-var_dump(IMAGES_PATH_HTML);
-var_dump(PRODUCTOS_PATH_HTML);
-
 
 ?>
 <body>
@@ -156,7 +152,7 @@ var_dump(PRODUCTOS_PATH_HTML);
                                        <div class="product-image">
                                           <div class="sale-label"><span><?php echo $prod->vendedor_id ?></span></div>
                                           <a href="producto-abierto.php">
-                                             <img src="images/producto.PNG" alt="Masha Wow!">
+                                             <img src="<?php echo $url ?>" alt="Masha Wow!">
                                           </a>
                                           <div class="product-detail-inner">
                                              <div class="detail-inner-left align-center">
