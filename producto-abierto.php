@@ -2,14 +2,16 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="es-AR">
     <!--<![endif]-->
-    
-    <?php require('part-head.php'); ?>
-    
+    <?php include_once('config.php');
+    require('part-head.php');
+    $relacionados = Producto::getRandom();
+    ?>
+
     <body>
         <div class="se-pre-con"></div>
-        <div class="main"> 
-            
-            <?php require('part-header.php'); ?> 
+        <div class="main">
+
+            <?php require('part-header.php'); ?>
 
             <!-- BANNER STRAT -->
             <div class="banner inner-banner">
@@ -25,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <!-- BANNER END -->  
+            <!-- BANNER END -->
 
             <!-- CONTAIN START -->
             <section class="container">
@@ -52,9 +54,9 @@
                                                 <del class="price old-price">$100.00</del>
                                             </div>
                                             <p>
-                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta 
-                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta 
-                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta 
+                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta
+                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta
+                                                Esta es una descripción de la Oferta Esta es una descripción de la Oferta
                                             </p>
                                             <div class="mb-40">
                                                 <div class="bottom-detail cart-button">
@@ -68,7 +70,7 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- esto se imprime una vez clickeado en obtener cupon -->
                                             <div class="detail-inner-left">
                                                 <ul>
@@ -90,7 +92,7 @@
                                                 </ul>
                                             </div>
                                             <!-- /esto se imprime una vez clickeado en obtener cupon -->
-                                            
+
                                             <div class="share-link">
                                                 <label>Compatir en : </label>
                                                 <div class="social-link">
@@ -123,6 +125,50 @@
                         <div class="row">
                             <div class="product-slider-main position-r">
                                 <div class="owl-carousel pro_cat_slider">
+                                   <?php foreach ($relacionados['results'] as $rel){
+                                      if ($rel->eliminado!=1) {
+                                         $vendedor = Vendedor::getById($rel->vendedor_id);
+                                         list($url,$size) = returnThumbnailImage($rel->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');
+                                         ?>
+                                         <div id="data-step1" class="items-step1 selected product-slider-main position-r" data-temp="tabdata">
+                                            <div class="col-md-3 col-sm-4 col-xs-6 plr-20 mb-40">
+                                               <div class="product-item">
+                                                 <div class="product-image">
+                                                    <div class="sale-label"><span><?php echo $vendedor->nombre; ?></span></div>
+                                                    <a href="producto-abierto.php">
+                                                       <img src="<?php echo $url ?>" alt="Masha Wow!">
+                                                    </a>
+                                                    <div class="product-detail-inner">
+                                                       <div class="detail-inner-left align-center">
+                                                          <ul>
+                                                             <li class="pro-cart-icon">
+                                                                <form>
+                                                                   <button title="Obtener Código"><span></span></button>
+                                                                </form>
+                                                             </li>
+                                                          </ul>
+                                                       </div>
+                                                    </div>
+                                                 </div>
+                                                 <div class="product-item-details">
+                                                    <div class="product-item-name">
+                                                       <a href="producto-abierto.php"><?php echo $rel->nombre; ?></a>
+                                                    </div>
+                                                    <div class="price-box">
+                                                       <?php if ($prod->descuento!=0 && $prod->descuento!='') { ?>
+                                                          <span class="price"><?php echo '$ ' . ((100-$rel->descuento)*$rel->precio/100); ?></span>
+                                                          <del class="price old-price"><?php echo "$ $rel->precio"; ?></del>
+                                                       <?php } else { ?>
+                                                          <span class="price"><?php echo "$ $rel->precio"; ?></span>
+                                                       <?php } ?>
+                                                    </div>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     <?php }
+                                  } ?>
+                                  <!--
                                     <div class="item">
                                         <div class="product-item">
                                             <div class="product-image">
@@ -333,18 +379,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <!-- CONTAINER END --> 
+            <!-- CONTAINER END -->
 
             <?php require('part-footer.php'); ?>
-            
+
         </div>
-        
+
         <?php require('part-script.php'); ?>
 
     </body>

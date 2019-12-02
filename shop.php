@@ -2,14 +2,14 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="es-AR">
     <!--<![endif]-->
-    
+    <?php include_once('config.php') ?>
     <?php require('part-head.php'); ?>
-    
+
     <body>
         <div class="se-pre-con"></div>
-        <div class="main"> 
-            
-            <?php require('part-header.php'); ?> 
+        <div class="main">
+
+            <?php require('part-header.php'); ?>
 
             <!-- BANNER STRAT -->
             <div class="banner inner-banner">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <!-- BANNER END --> 
+            <!-- BANNER END -->
 
             <!-- CONTAIN START -->
             <section class="container pb-85 pt-55">
@@ -91,12 +91,12 @@
                                         <div class="list-types grid active ">
                                             <a href="shop.php">
                                                 <div class="grid-icon list-types-icon"></div>
-                                            </a> 
+                                            </a>
                                         </div>
                                         <div class="list-types list">
                                             <a href="shop-list.php">
                                                 <div class="list-icon list-types-icon"></div>
-                                            </a> 
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="short-by float-right-sm">
@@ -506,12 +506,12 @@
                     </div>
                 </div>
             </section>
-            <!-- CONTAINER END --> 
+            <!-- CONTAINER END -->
 
             <?php require('part-footer.php'); ?>
-            
+
         </div>
-        
+
         <?php require('part-script.php'); ?>
 
     </body>

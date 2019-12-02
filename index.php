@@ -1,7 +1,6 @@
 <?php include_once('config.php') ?>
 <?php require('part-head.php');
 
-
 $categorias = Categoria::getDestacados();
 $productos = Producto::getRandom();
 
@@ -141,45 +140,49 @@ $productos = Producto::getRandom();
                      <div class="tab_content pro_cat">
                         <ul>
                            <li>
-
                               <?php foreach ($productos['results'] as $prod){
-                               list($url,$size) = returnThumbnailImage($prod->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');
-                              ?>
-
-                              <div id="data-step1" class="items-step1 selected product-slider-main position-r" data-temp="tabdata">
-                                 <div class="col-md-3 col-sm-4 col-xs-6 plr-20 mb-40">
-                                    <div class="product-item">
-                                       <div class="product-image">
-                                          <div class="sale-label"><span><?php echo $prod->vendedor_id ?></span></div>
-                                          <a href="producto-abierto.php">
-                                             <img src="<?php echo $url ?>" alt="Masha Wow!">
-                                          </a>
-                                          <div class="product-detail-inner">
-                                             <div class="detail-inner-left align-center">
-                                                <ul>
-                                                   <li class="pro-cart-icon">
-                                                      <form>
-                                                         <button title="Obtener Código"><span></span></button>
-                                                      </form>
-                                                   </li>
-                                                </ul>
+                                 if ($prod->eliminado!=1) {
+                                    $vendedor = Vendedor::getById($prod->vendedor_id);
+                                    list($url,$size) = returnThumbnailImage($prod->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');
+                                    ?>
+                                    <div id="data-step1" class="items-step1 selected product-slider-main position-r" data-temp="tabdata">
+                                       <div class="col-md-3 col-sm-4 col-xs-6 plr-20 mb-40">
+                                          <div class="product-item">
+                                             <div class="product-image">
+                                                <div class="sale-label"><span><?php echo $vendedor->nombre; ?></span></div>
+                                                <a href="producto-abierto.php">
+                                                   <img src="<?php echo $url ?>" alt="Masha Wow!">
+                                                </a>
+                                                <div class="product-detail-inner">
+                                                   <div class="detail-inner-left align-center">
+                                                      <ul>
+                                                         <li class="pro-cart-icon">
+                                                            <form>
+                                                               <button title="Obtener Código"><span></span></button>
+                                                            </form>
+                                                         </li>
+                                                      </ul>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class="product-item-details">
+                                                <div class="product-item-name">
+                                                   <a href="producto-abierto.php"><?php echo $prod->nombre; ?></a>
+                                                </div>
+                                                <div class="price-box">
+                                                   <?php if ($prod->descuento!=0 && $prod->descuento!='') { ?>
+                                                      <span class="price"><?php echo '$ ' . ((100-$prod->descuento)*$prod->precio/100); ?></span>
+                                                      <del class="price old-price"><?php echo "$ $prod->precio"; ?></del>
+                                                   <?php } else { ?>
+                                                      <span class="price"><?php echo "$ $prod->precio"; ?></span>
+                                                   <?php } ?>
+                                                </div>
                                              </div>
                                           </div>
                                        </div>
-                                       <div class="product-item-details">
-                                          <div class="product-item-name">
-                                             <a href="producto-abierto.php">Masha Wow!</a>
-                                          </div>
-                                          <div class="price-box">
-                                             <span class="price">$80.00</span>
-                                             <del class="price old-price">$100.00</del>
-                                          </div>
-                                       </div>
                                     </div>
-                                 </div>
-                              </div>
-
-                              <?php } ?>
+                              <?php }
+                            } ?>
 
                            <!-- </li><li>
                               <div id="data-step1" class="items-step1 selected product-slider-main position-r" data-temp="tabdata">
