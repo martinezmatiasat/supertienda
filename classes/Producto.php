@@ -49,6 +49,22 @@ class Producto{
 		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", null, null, null );
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
+	
+	public static function getIndex() {
+	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", 10, array("descuento = 0", "eliminado = 0"), "rand()" );
+	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+	}
+	
+	public function getRelacionados(){
+	    $cats = explode(',', $this->categorias);
+	    $ors = array();
+	    foreach ($cats as $c){
+	        if ($c && $c != '') $ors[] = " categorias like '%$c%' ";
+	    }
+	    $where = array(implode(' or ', $ors));
+	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", 10, $where, "rand()" );
+	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+	}
 
 	public static function getRandom() {
 		$result = ConnectionFactory::getFactory()->getRandomList("producto", "Producto", 8);

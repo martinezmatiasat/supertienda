@@ -1,10 +1,18 @@
+<?php 
+include_once 'config.php';
+$producto = Producto::getById(getVar('pid'));
+if (!$producto || $producto->eliminado){
+    header('Location: index.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="es-AR">
     <!--<![endif]-->
     <?php include_once('config.php');
     require('part-head.php');
-    $relacionados = Producto::getRandom();
+    $relacionados = $producto->getRelacionados();
     ?>
 
     <body>
@@ -72,7 +80,7 @@
                                             </div>
 
                                             <!-- esto se imprime una vez clickeado en obtener cupon -->
-                                            <div class="detail-inner-left">
+                                            <div class="detail-inner-left show-on-buy">
                                                 <ul>
                                                     <h3>
                                                         El cupón es: xxxxxxx <br/>

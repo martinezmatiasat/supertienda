@@ -2,7 +2,7 @@
 <?php require('part-head.php');
 
 $categorias = Categoria::getDestacados();
-$productos = Producto::getRandom();
+$productos = Producto::getIndex();
 
 ?>
 <body>
