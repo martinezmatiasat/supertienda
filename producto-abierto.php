@@ -1,20 +1,17 @@
-<?php 
+<?php
 include_once 'config.php';
+require('part-head.php');
 $producto = Producto::getById(getVar('pid'));
 if (!$producto || $producto->eliminado){
     header('Location: index.php');
     exit();
 }
+$relacionados = Producto::getRelacionados($producto);
 ?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="es-AR">
     <!--<![endif]-->
-    <?php include_once('config.php');
-    require('part-head.php');
-    $relacionados = $producto->getRelacionados();
-    ?>
-
     <body>
         <div class="se-pre-con"></div>
         <div class="main">
@@ -25,11 +22,11 @@ if (!$producto || $producto->eliminado){
             <div class="banner inner-banner">
                 <div class="container">
                     <div class="bread-crumb mtb-60 center-xs">
-                        <div class="page-title">Título de la Oferta</div>
+                        <div class="page-title"><?php echo $producto->nombre ?></div>
                         <div class="bread-crumb-inner right-side float-none-xs">
                             <ul>
                                 <li><a href="index.php">Home</a><i class="fa fa-angle-right"></i></li>
-                                <li><span>Título de la Oferta</span></li>
+                                <li><span><?php echo $producto->nombre ?></span></li>
                             </ul>
                         </div>
                     </div>
@@ -43,7 +40,8 @@ if (!$producto || $producto->eliminado){
                     <div class="row">
                         <div class="col-md-5 col-sm-5 mb-xs-30">
                             <div class="fotorama" data-nav="thumbs" data-allowfullscreen="native">
-                                <a href="#"><img src="images/producto.PNG" alt="Streetwear"></a>
+                               <?php list($url,$size) = returnThumbnailImage($producto->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg'); ?>
+                                <a href="#"><img src=<?php echo $url ?> alt="Streetwear"></a>
                                 <a href="#"><img src="images/producto.PNG" alt="Streetwear"></a>
                                 <a href="#"><img src="images/producto.PNG" alt="Streetwear"></a>
                                 <a href="#"><img src="images/producto.PNG" alt="Streetwear"></a>
@@ -56,10 +54,14 @@ if (!$producto || $producto->eliminado){
                                 <div class="col-xs-12">
                                     <div class="product-detail-main">
                                         <div class="product-item-details">
-                                            <h1 class="product-item-name">Título de la Oferta</h1>
+                                            <h1 class="product-item-name"><?php echo $producto->nombre ?></h1>
                                             <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
+                                               <?php if ($producto->descuento!=0 && $producto->descuento!='') { ?>
+                                                 <span class="price"><?php echo '$ ' . ((100-$producto->descuento)*$producto->precio/100); ?></span>
+                                                 <del class="price old-price"><?php echo "$ $producto->precio"; ?></del>
+                                               <?php } else { ?>
+                                                 <span class="price"><?php echo "$ $producto->precio"; ?></span>
+                                               <?php } ?>
                                             </div>
                                             <p>
                                                 Esta es una descripción de la Oferta Esta es una descripción de la Oferta
@@ -84,7 +86,7 @@ if (!$producto || $producto->eliminado){
                                                 <ul>
                                                     <h3>
                                                         El cupón es: xxxxxxx <br/>
-                                                        y tiene una validez de xx días.
+                                                        y tiene una validez de <?php echo $producto->duracion ?> días.
                                                     </h3>
                                                     <p>Enviar cupón por correo:</p>
                                                     <form action="" method="post">
@@ -134,7 +136,7 @@ if (!$producto || $producto->eliminado){
                             <div class="product-slider-main position-r">
                                 <div class="owl-carousel pro_cat_slider">
                                    <?php foreach ($relacionados['results'] as $rel){
-                                      if ($rel->eliminado!=1) {
+                                      //if ($rel->eliminado!=1) {
                                          $vendedor = Vendedor::getById($rel->vendedor_id);
                                          list($url,$size) = returnThumbnailImage($rel->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');
                                          ?>
@@ -143,7 +145,7 @@ if (!$producto || $producto->eliminado){
                                                <div class="product-item">
                                                  <div class="product-image">
                                                     <div class="sale-label"><span><?php echo $vendedor->nombre; ?></span></div>
-                                                    <a href="producto-abierto.php">
+                                                    <a href="producto-abierto.php?pid=<?php echo $rel->producto_id ?>">
                                                        <img src="<?php echo $url ?>" alt="Masha Wow!">
                                                     </a>
                                                     <div class="product-detail-inner">
@@ -160,10 +162,10 @@ if (!$producto || $producto->eliminado){
                                                  </div>
                                                  <div class="product-item-details">
                                                     <div class="product-item-name">
-                                                       <a href="producto-abierto.php"><?php echo $rel->nombre; ?></a>
+                                                       <a href="producto-abierto.php?pid=<?php echo $rel->producto_id ?>"><?php echo $rel->nombre; ?></a>
                                                     </div>
                                                     <div class="price-box">
-                                                       <?php if ($prod->descuento!=0 && $prod->descuento!='') { ?>
+                                                       <?php if ($rel->descuento!=0 && $rel->descuento!='') { ?>
                                                           <span class="price"><?php echo '$ ' . ((100-$rel->descuento)*$rel->precio/100); ?></span>
                                                           <del class="price old-price"><?php echo "$ $rel->precio"; ?></del>
                                                        <?php } else { ?>
@@ -174,7 +176,7 @@ if (!$producto || $producto->eliminado){
                                               </div>
                                            </div>
                                         </div>
-                                     <?php }
+                                     <?php //}
                                   } ?>
                                   <!--
                                     <div class="item">

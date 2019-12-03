@@ -49,14 +49,14 @@ class Producto{
 		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", null, null, null );
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
-	
+
 	public static function getIndex() {
-	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", 10, array("descuento = 0", "eliminado = 0"), "rand()" );
+	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", 10, array("descuento != 0", "eliminado = 0"), "rand()" );
 	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
-	
-	public function getRelacionados(){
-	    $cats = explode(',', $this->categorias);
+
+	public static function getRelacionados($p){
+	    $cats = explode(',', $p->categorias);
 	    $ors = array();
 	    foreach ($cats as $c){
 	        if ($c && $c != '') $ors[] = " categorias like '%$c%' ";
@@ -98,7 +98,7 @@ class Producto{
 			$this->foto = $photo9;
 
 			var_dump($photo9);
-			
+
 			$fields = array("vendedor_id","nombre","precio","descuento","foto","duracion","descripcion","eliminado","categorias");
 			$result = ConnectionFactory::getFactory()->insert($this, "producto", $fields);
 			if ($result["error"]) $error = array($result["error"]);

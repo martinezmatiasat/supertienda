@@ -3,7 +3,6 @@
 
 $categorias = Categoria::getDestacados();
 $productos = Producto::getIndex();
-
 ?>
 <body>
    <div class="se-pre-con"></div>
@@ -141,7 +140,6 @@ $productos = Producto::getIndex();
                         <ul>
                            <li>
                               <?php foreach ($productos['results'] as $prod){
-                                 if ($prod->eliminado!=1) {
                                     $vendedor = Vendedor::getById($prod->vendedor_id);
                                     list($url,$size) = returnThumbnailImage($prod->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');
                                     ?>
@@ -150,7 +148,7 @@ $productos = Producto::getIndex();
                                           <div class="product-item">
                                              <div class="product-image">
                                                 <div class="sale-label"><span><?php echo $vendedor->nombre; ?></span></div>
-                                                <a href="producto-abierto.php">
+                                                <a href="producto-abierto.php?pid=<?php echo $prod->producto_id ?>" >
                                                    <img src="<?php echo $url ?>" alt="Masha Wow!">
                                                 </a>
                                                 <div class="product-detail-inner">
@@ -167,7 +165,7 @@ $productos = Producto::getIndex();
                                              </div>
                                              <div class="product-item-details">
                                                 <div class="product-item-name">
-                                                   <a href="producto-abierto.php"><?php echo $prod->nombre; ?></a>
+                                                   <a href="producto-abierto.php?pid=<?php echo $prod->producto_id ?>" ><?php echo $prod->nombre; ?></a>
                                                 </div>
                                                 <div class="price-box">
                                                    <?php if ($prod->descuento!=0 && $prod->descuento!='') { ?>
@@ -181,7 +179,7 @@ $productos = Producto::getIndex();
                                           </div>
                                        </div>
                                     </div>
-                              <?php }
+                              <?php
                             } ?>
 
                            <!-- </li><li>
