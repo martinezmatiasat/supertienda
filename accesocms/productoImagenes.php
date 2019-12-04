@@ -158,9 +158,9 @@ function listProductoImagens($results){
 									</td>
 									<td align="center" width="100px">
 					        			<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" href="javascript:if(confirm('<?php echo $lang['PRODUCTO_IMAGEN_DELETE_CONFIRM'] ?>')) location.href = 'productoImagenes.php?action=delete&amp;id=<?php echo $a->producto_imagen_id ?>&pid=<?php echo getVar('pid') ?>'">
-					          				<i class="far fa-trash-alt"></i>
-					          			</a>
-			          				</td>
+					          			<i class="far fa-trash-alt"></i>
+					          		</a>
+			          			</td>
 								</tr>
 							<?php } ?>
 			    			</tbody>
