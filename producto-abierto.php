@@ -9,6 +9,17 @@ if (!$producto || $producto->eliminado){
 $relacionados = Producto::getRelacionados($producto);
 $imagenes = ProductoImagen::getAllList($producto->producto_id);
 
+if (isset($_GET["comprar"])) {
+   $com = array('compra_id'=>null, 'producto_id'=>null, 'vendedor_id'=>null, 'codigo'=>null, 'email'=>null, 'estado'=>null, 'session_id'=>null, 'fecha_expiracion'=>null, 'fecha_compra'=>null);
+   $com['producto_id'] = $producto->producto_id;
+   $com['vendedor_id'] = $producto->vendedor_id;
+   $com['codigo'] = strtoupper(generateRandomString(6));
+   $date = date("d-m-Y");
+   $new_date = strtotime($date."+ $producto->duracion days");
+   $com['fecha_expiracion'] = date("d-m-Y", $new_date);
+   $compra = new Compra();
+}
+
 ?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -73,20 +84,22 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                  <div class="bottom-detail cart-button">
                                     <ul>
                                        <li class="pro-cart-icon">
-                                          <form>
-                                             <button title="Add to Cart" class="btn-black">
-                                                <span></span>Obtener Cupón</button>
-                                             </form>
-                                          </li>
-                                       </ul>
-                                    </div>
+                                          <form action="producto-abierto.php?pid=<?php echo $producto->producto_id ?>&comprar" method="get">
+                                             <button title="Add to Cart" class="btn-black" type="submit">
+                                                <span></span>Obtener Cupón
+                                             </button>
+                                          </form>
+                                       </li>
+                                    </ul>
                                  </div>
+                              </div>
 
+                              <?php if (isset($_GET["comprar"])){ ?>
                                  <!-- esto se imprime una vez clickeado en obtener cupon -->
                                  <div class="detail-inner-left show-on-buy">
                                     <ul>
                                        <h3>
-                                          El cupón es: xxxxxxx <br/>
+                                          El cupón es: <?php echo $com['codigo'] ?> <br/>
                                           y tiene una validez de <?php echo $producto->duracion ?> días.
                                        </h3>
                                        <p>Enviar cupón por correo:</p>
@@ -103,6 +116,8 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                     </ul>
                                  </div>
                                  <!-- /esto se imprime una vez clickeado en obtener cupon -->
+                                 <?php } ?>
+
 
                                  <div class="share-link">
                                     <label>Compatir en : </label>
@@ -136,7 +151,6 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                      <div class="product-slider-main position-r">
                         <div class="owl-carousel pro_cat_slider">
                            <?php foreach ($relacionados['results'] as $rel){
-                              //if ($rel->eliminado!=1) {
                               $vendedor = Vendedor::getById($rel->vendedor_id);
                               list($url,$size) = returnThumbnailImage($rel->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');?>
                               <div class="item">

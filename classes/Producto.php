@@ -62,8 +62,9 @@ class Producto{
 	        if ($c && $c != '') $ors[] = " categorias like '%$c%' ";
 	    }
 	    $where = array(implode(' or ', $ors));
+		 $where[0] .= 'and eliminado = 0';
 	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", 10, $where, "rand()" );
-	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"], "where" => $where));
 	}
 
 	public static function getRandom() {
@@ -96,9 +97,6 @@ class Producto{
 				$photo9 = returnEncryptedName($_FILES["foto"]["name"],generateRandomString());
 			}else $photo9 = null;
 			$this->foto = $photo9;
-
-			var_dump($photo9);
-
 			$fields = array("vendedor_id","nombre","precio","descuento","foto","duracion","descripcion","eliminado","categorias");
 			$result = ConnectionFactory::getFactory()->insert($this, "producto", $fields);
 			if ($result["error"]) $error = array($result["error"]);

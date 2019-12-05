@@ -178,7 +178,7 @@ function addEditProducto($results){
 						<div class="form-group">
 							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"PRODUCTO_COL_DESCUENTO") ?></label>
 							<div class="col-sm-9 col-md-9 col-lg-10  ">
-								<input class="form-control input-sm" placeholder="Descuento" type="number" name="descuento"  value='<?php echo $results["producto"]->descuento ?>' step="1"/>
+								<input class="form-control input-sm" placeholder="Valor con el descuento aplicado" type="number" name="descuento"  value='<?php echo $results["producto"]->descuento ?>' step="1"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -203,7 +203,7 @@ function addEditProducto($results){
 						<div class="form-group">
 							<label class="col-sm-3 col-md-3 col-lg-2 control-label"><?php echo showLang($lang,"PRODUCTO_COL_DURACION") ?></label>
 							<div class="col-sm-9 col-md-9 col-lg-10  ">
-								<input class="form-control input-sm" placeholder="Cantidad de horas" type="number" name="duracion" required  value='<?php echo $results["producto"]->duracion ?>' step="1"/>
+								<input class="form-control input-sm" placeholder="Cantidad de días" type="number" name="duracion" required  value='<?php echo $results["producto"]->duracion ?>' step="1"/>
 							</div>
 						</div>
 						<div class="form-group">
