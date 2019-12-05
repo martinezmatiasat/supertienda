@@ -62,7 +62,7 @@ class Producto{
 	        if ($c && $c != '') $ors[] = " categorias like '%$c%' ";
 	    }
 	    $where = array(implode(' or ', $ors));
-		 $where[0] .= 'and eliminado = 0';
+		 $where[] = 'eliminado = 0';
 	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", 10, $where, "rand()" );
 	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"], "where" => $where));
 	}
