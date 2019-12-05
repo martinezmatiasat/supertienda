@@ -1,25 +1,23 @@
 <?php
 include_once 'config.php';
-require('part-head.php');
+
 $producto = Producto::getById(getVar('pid'));
 if (!$producto || $producto->eliminado){
-   header('Location: index.php');
-   exit();
+    header('Location: index.php');
+    exit();
 }
-$relacionados = Producto::getRelacionados($producto);
-$imagenes = ProductoImagen::getAllList($producto->producto_id);
 
 if (isset($_GET["comprar"])) {
-   $com = array('compra_id'=>null, 'producto_id'=>null, 'vendedor_id'=>null, 'codigo'=>null, 'email'=>null, 'estado'=>null, 'session_id'=>null, 'fecha_expiracion'=>null, 'fecha_compra'=>null);
-   $com['producto_id'] = $producto->producto_id;
-   $com['vendedor_id'] = $producto->vendedor_id;
-   $com['codigo'] = strtoupper(generateRandomString(6));
-   $date = date("d-m-Y");
-   $new_date = strtotime($date."+ $producto->duracion days");
-   $com['fecha_expiracion'] = date("d-m-Y", $new_date);
-   $compra = new Compra();
+    $com = new Compra(array('producto_id' => $producto->producto_id, 'vendedor_id'=>$producto->vendedor_id, 'codigo'=>strtoupper(generateRandomString(6)), 'estado'=> 0));
+    $com->session_id = session_id();
+    $com->fecha_expiracion = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s")." + ".$producto->duracion." days"));
+    $com->insert();
 }
 
+require('part-head.php');
+
+$relacionados = Producto::getRelacionados($producto);
+$imagenes = ProductoImagen::getAllList($producto->producto_id);
 ?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -53,8 +51,6 @@ if (isset($_GET["comprar"])) {
             <div class="row">
                <div class="col-md-5 col-sm-5 mb-xs-30">
                   <div class="fotorama" data-nav="thumbs" data-allowfullscreen="native">
-                     <?php list($url,$size) = returnThumbnailImage($producto->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg'); ?>
-                     <a href="#"><img src=<?php echo $url ?> alt="Streetwear"></a>
                      <?php foreach ($imagenes['results'] as $img){
                         list($url,$size) = returnThumbnailImage($img->imagen,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,80,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg');?>
                         <a href="#"><img src=<?php echo $url ?> alt="Streetwear"></a>
@@ -84,7 +80,9 @@ if (isset($_GET["comprar"])) {
                                  <div class="bottom-detail cart-button">
                                     <ul>
                                        <li class="pro-cart-icon">
-                                          <form action="producto-abierto.php?pid=<?php echo $producto->producto_id ?>&comprar" method="get">
+                                          <form action="producto-abierto.php" method="get">
+                                             <input type="hidden" name="pid" value="<?php echo $producto->producto_id ?>">
+                                             <input type="hidden" name="comprar" value="">
                                              <button title="Add to Cart" class="btn-black" type="submit">
                                                 <span></span>Obtener Cupón
                                              </button>
@@ -99,7 +97,7 @@ if (isset($_GET["comprar"])) {
                                  <div class="detail-inner-left show-on-buy">
                                     <ul>
                                        <h3>
-                                          El cupón es: <?php echo $com['codigo'] ?> <br/>
+                                          El cupón es: <?php echo $com->codigo ?> <br/>
                                           y tiene una validez de <?php echo $producto->duracion ?> días.
                                        </h3>
                                        <p>Enviar cupón por correo:</p>
@@ -150,7 +148,8 @@ if (isset($_GET["comprar"])) {
                   <div class="row">
                      <div class="product-slider-main position-r">
                         <div class="owl-carousel pro_cat_slider">
-                           <?php foreach ($relacionados['results'] as $rel){
+                           <?php 
+                           foreach ($relacionados['results'] as $rel){
                               $vendedor = Vendedor::getById($rel->vendedor_id);
                               list($url,$size) = returnThumbnailImage($rel->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');?>
                               <div class="item">

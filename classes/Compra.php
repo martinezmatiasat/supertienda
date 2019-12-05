@@ -22,11 +22,11 @@ class Compra {
       if (isset($data["fecha_compra"])) $this->fecha_compra = $data["fecha_compra"];
    }
 
-   public function insert($producto_id) {
-      $fields = array("compra_id", "producto_id", "vendedor_id", "codigo", "email", "estado", "session_id", "fecha_expiracion", "fecha_compra");
+   public function insert() {
+      $fields = array("compra_id", "producto_id", "vendedor_id", "codigo", "email", "estado", "session_id", "fecha_expiracion");
 
       $result = ConnectionFactory::getFactory()->insert($this, "compra", $fields);
-      return array("error" => $error, "id" => $id);
+
    }
 
 
