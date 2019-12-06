@@ -30,6 +30,11 @@ class Producto{
 		return $result["object"];
 	}
 
+	public static function getByName( $producto_id ) {
+		$result = ConnectionFactory::getFactory()->getByArray("producto", array("nombre"), array($nombre), "Producto");
+		return $result["object"];
+	}
+
 	public static function getByUrl($url) {
 		$result = ConnectionFactory::getFactory()->getByArray("producto", array("url","eliminado"), array($url,0), "Producto");
 		return $result["object"];
@@ -46,7 +51,7 @@ class Producto{
 	}
 
 	public static function getAllList() {
-		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", null, null, null );
+		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", null, array("eliminado = 0"), null );
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
 

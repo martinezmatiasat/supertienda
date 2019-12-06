@@ -113,6 +113,7 @@ class ConnectionFactory{
 				$stmt .= ' where ';
 				$stmt .= implode(' and ', $where);
 			}
+			
 			if ($orderBy && $orderBy != '') $stmt .= ' order by '.$orderBy;
 			if ($limit && $limit != '') {
 				$stmt2 = "select count(*) c from ($stmt)t1";

@@ -206,5 +206,25 @@ $lang = array(
 	"VENDEDOR_COL_TELEFONO" => "Telefono",
 	"VENDEDOR_COL_MAIL" => "Mail",
 	"VENDEDOR_COL_U1_ID" => "u1_id",
+
+	//COMPRA
+	"HEADER_COMPRA" => "Compra",
+	"COMPRA_NEW" => "Nuevo Compra",
+	"COMPRA_EDIT" => "Editar Compra",
+	"COMPRA_LIST" => "Compras",
+	"COMPRA_NOT_FOUND" => "Error: Compra no encontrado.",
+	"COMPRA_DELETED" => "Compra Eliminado.",
+	"COMPRA_INFO" => "Compra Información",
+	"COMPRA_ADD" => "Agregar Compra",
+	"COMPRA_DELETE_CONFIRM" => "Desea eliminar este Compra?",
+	"COMPRA_COL_COMPRA_ID" => "compra_id",
+	"COMPRA_COL_PRODUCTO_ID" => "producto_id",
+	"COMPRA_COL_VENDEDOR_ID" => "vendedor_id",
+	"COMPRA_COL_CODIGO" => "codigo",
+	"COMPRA_COL_EMAIL" => "email",
+	"COMPRA_COL_ESTADO" => "estado",
+	"COMPRA_COL_SESSION_ID" => "session_id",
+	"COMPRA_COL_FECHA_EXPIRACION" => "fecha_expiracion",
+	"COMPRA_COL_FECHA_COMPRA" => "fecha_compra",
 );
 ?>

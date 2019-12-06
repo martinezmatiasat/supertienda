@@ -13,7 +13,9 @@ if (isset($_GET["comprar"])) {
     $com->fecha_expiracion = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s")." + ".$producto->duracion." days"));
     $com->insert();
 }
-
+if (isset($_POST["emailcupon"])) {
+   echo "funciona";
+}
 require('part-head.php');
 
 $relacionados = Producto::getRelacionados($producto);
@@ -76,23 +78,23 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                  Esta es una descripción de la Oferta Esta es una descripción de la Oferta
                                  Esta es una descripción de la Oferta Esta es una descripción de la Oferta
                               </p>
-                              <div class="mb-40">
-                                 <div class="bottom-detail cart-button">
-                                    <ul>
-                                       <li class="pro-cart-icon">
-                                          <form action="producto-abierto.php" method="get">
-                                             <input type="hidden" name="pid" value="<?php echo $producto->producto_id ?>">
-                                             <input type="hidden" name="comprar" value="">
-                                             <button title="Add to Cart" class="btn-black" type="submit">
-                                                <span></span>Obtener Cupón
-                                             </button>
-                                          </form>
-                                       </li>
-                                    </ul>
+                              <?php if (!isset($_GET["comprar"])) { ?>
+                                 <div class="mb-40">
+                                    <div class="bottom-detail cart-button">
+                                       <ul>
+                                          <li class="pro-cart-icon">
+                                             <form action="producto-abierto.php" method="get">
+                                                <input type="hidden" name="pid" value="<?php echo $producto->producto_id ?>">
+                                                <input type="hidden" name="comprar" value="">
+                                                <button title="Add to Cart" class="btn-black" type="submit">
+                                                   <span></span>Obtener Cupón
+                                                </button>
+                                             </form>
+                                          </li>
+                                       </ul>
+                                    </div>
                                  </div>
-                              </div>
-
-                              <?php if (isset($_GET["comprar"])){ ?>
+                              <?php } else { ?>
                                  <!-- esto se imprime una vez clickeado en obtener cupon -->
                                  <div class="detail-inner-left show-on-buy">
                                     <ul>
@@ -101,8 +103,7 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                           y tiene una validez de <?php echo $producto->duracion ?> días.
                                        </h3>
                                        <p>Enviar cupón por correo:</p>
-                                       <form action="" method="post">
-                                          <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
+                                       <form action="producto-abierto.php" method="post">
                                           <div class="form-group">
                                              <input type="email" name="emailcupon" class="form-control" required data-required-error="Campo Obligatorio" placeholder="ejemplo@dominio.com">
                                              <div class="help-block with-errors"></div>
@@ -114,9 +115,10 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                     </ul>
                                  </div>
                                  <!-- /esto se imprime una vez clickeado en obtener cupon -->
-                                 <?php } ?>
-
-
+                              <?php }
+                              if (isset($_POST["emailcupon"])) { ?>
+                                 <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
+                              <?php } ?>
                                  <div class="share-link">
                                     <label>Compatir en : </label>
                                     <div class="social-link">
@@ -148,7 +150,7 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                   <div class="row">
                      <div class="product-slider-main position-r">
                         <div class="owl-carousel pro_cat_slider">
-                           <?php 
+                           <?php
                            foreach ($relacionados['results'] as $rel){
                               $vendedor = Vendedor::getById($rel->vendedor_id);
                               list($url,$size) = returnThumbnailImage($rel->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');?>

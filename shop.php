@@ -3,7 +3,11 @@
 <html lang="es-AR">
     <!--<![endif]-->
     <?php include_once('config.php') ?>
-    <?php require('part-head.php'); ?>
+    <?php require('part-head.php');
+    $productos = Producto::getAllList();
+    var_dump($productos['results']);
+
+    ?>
 
     <body>
         <div class="se-pre-con"></div>
@@ -102,12 +106,17 @@
                                     <div class="short-by float-right-sm">
                                         <span>Filtrar por</span>
                                         <div class="select-item">
-                                            <select>
-                                                <option value="" selected="selected">Nombre (A to Z)</option>
-                                                <option value="">Nombre (Z - A)</option>
-                                                <option value="">Precio (Bajo &gt; Algo)</option>
-                                                <option value="">Precio (Alto &gt; Bajo)</option>
+                                            <select name="opcSelect">
+                                                <option value="1" selected="selected">Nombre (A to Z)</option>
+                                                <option value="2">Nombre (Z - A)</option>
+                                                <option value="3">Precio (Bajo &gt; Algo)</option>
+                                                <option value="4">Precio (Alto &gt; Bajo)</option>
                                             </select>
+                                            <?php if ($_REQUEST["opcSelect"]=="1") {
+                                               /* foreach ($productos["results"]->nombre as $nom) {
+                                                  echo $nom;
+                                               } */
+                                            } ?>
                                         </div>
                                     </div>
                                 </div>
