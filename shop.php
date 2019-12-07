@@ -4,9 +4,8 @@
     <!--<![endif]-->
     <?php include_once('config.php') ?>
     <?php require('part-head.php');
-    $productos = Producto::getAllList();
-    var_dump($productos['results']);
-
+    $productos = ConnectionFactory::getFactory()->getList("producto", "Producto", 24, array("eliminado = 0"), "nombre");
+    $categorias = Categoria::getAllList();
     ?>
 
     <body>
@@ -55,32 +54,27 @@
                                     </div>
                                     <div class="sidebar-contant">
                                         <ul>
-                                            <li>
-                                                <a href="#">Categoría 1 <span>(21)</span></a>
-                                                <ul>
-                                                    <li>
-                                                        <a href="#">Subcategoría 1 (0)</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">Subcategoría 2 (3)</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                <a href="#">Categoría 2 <span>(05)</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Categoría 3 <span>(10)</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Categoría 4 <span>(12)</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Categoría 5 <span>(18)</span></a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Categoría 6 <span>(70)</span></a>
-                                            </li>
+                                           <?php
+                                           foreach ($categorias['results'] as $cat) {
+                                              if ($cat->subcategoria_id=='0') { ?>
+                                                 <li>
+                                                    <a href="#"><?php echo $cat->nombre ?><span>(05)</span></a>
+                                                </li>
+                                             <?php } else { echo "hola";?>
+                                                <li>
+                                                   <a href="#"><?php echo $cat->nombre ?><span>(21)</span></a>
+                                                   <ul>
+                                                      <?php foreach ($categorias['results'] as $subcat) {
+                                                         if ($subcat->subcategoria_id!='0') { ?>
+                                                            <li>
+                                                                <a href="#"><?php echo $subcat->nombre ?></a>
+                                                            </li>
+                                                         <?php }
+                                                      } ?>
+                                                   </ul>
+                                               </li>
+                                             <?php };
+                                           } ?>
                                         </ul>
                                     </div>
                                 </div>
@@ -89,6 +83,7 @@
                     </div>
                     <div class="col-md-9 col-sm-8">
                         <div class="shorting mb-30">
+                           <form class="" name="ordenar" action="shop.php" method="get">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="view">
@@ -109,14 +104,9 @@
                                             <select name="opcSelect">
                                                 <option value="1" selected="selected">Nombre (A to Z)</option>
                                                 <option value="2">Nombre (Z - A)</option>
-                                                <option value="3">Precio (Bajo &gt; Algo)</option>
+                                                <option value="3">Precio (Bajo &gt; Alto)</option>
                                                 <option value="4">Precio (Alto &gt; Bajo)</option>
                                             </select>
-                                            <?php if ($_REQUEST["opcSelect"]=="1") {
-                                               /* foreach ($productos["results"]->nombre as $nom) {
-                                                  echo $nom;
-                                               } */
-                                            } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -124,25 +114,46 @@
                                     <div class="show-item right-side float-left-sm">
                                         <span>Mostrar</span>
                                         <div class="select-item">
-                                            <select>
-                                                <option value="" selected="selected">24</option>
-                                                <option value="">12</option>
-                                                <option value="">6</option>
+                                            <select name="cantPerPage">
+                                                <option value="24" selected="selected">24</option>
+                                                <option value="12">12</option>
+                                                <option value="6">6</option>
                                             </select>
                                         </div>
                                         <span>Por hoja</span>
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                            <input type="submit" class="btn-black" name="btn-ordenar" value="Buscar">
+                            </form>
                         </div>
                         <div class="product-listing">
                             <div class="row mlr_-20">
-                                <div class="col-md-4 col-xs-6 plr-20">
+                               <?php
+                               if (isset($_REQUEST['opcSelect'])) {
+                                  if ($_REQUEST['opcSelect']=='1') {
+                                        $productos = ConnectionFactory::getFactory()->getList("producto", "Producto", $_REQUEST["cantPerPage"], array("eliminado = 0"), "nombre");
+                                  } elseif ($_REQUEST['opcSelect']=='2') {
+                                        $productos = ConnectionFactory::getFactory()->getList("producto", "Producto", 24, array("eliminado = 0"), "nombre DESC");
+                                  }  elseif ($_REQUEST['opcSelect']=='3') {
+                                       $productos = ConnectionFactory::getFactory()->getList("producto", "Producto", 24, array("eliminado = 0"), "descuento");
+                                  }  elseif ($_REQUEST['opcSelect']=='4') {
+                                       $productos = ConnectionFactory::getFactory()->getList("producto", "Producto", 24, array("eliminado = 0"), "descuento DESC");
+                                  }
+                               }
+
+                               foreach ($productos['list'] as $prod){
+                                  $vendedor = Vendedor::getById($prod->vendedor_id);
+                                  list($url,$size) = returnThumbnailImage($prod->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg');
+                                  ?>
+
+                                 <div class="col-md-4 col-xs-6 plr-20">
                                     <div class="product-item">
                                         <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
+                                            <div class="sale-label"><span><?php echo $vendedor->nombre; ?></span></div>
                                             <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
+                                                <img src="<?php echo $url ?>" alt="Masha Wow!">
                                             </a>
                                             <div class="product-detail-inner">
                                                 <div class="detail-inner-left align-center">
@@ -158,359 +169,16 @@
                                         </div>
                                         <div class="product-item-details">
                                             <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
+                                                <a href="producto-abierto.php"><?php echo $prod->nombre; ?></a>
                                             </div>
                                             <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
+                                                <span class="price"><?php echo "$ $prod->descuento"; ?></span>
+                                                <del class="price old-price"><?php echo "$ $prod->precio"; ?></del>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-xs-6 plr-20">
-                                    <div class="product-item">
-                                        <div class="product-image">
-                                            <div class="sale-label"><span>Masha Wow!</span></div>
-                                            <a href="producto-abierto.php">
-                                                <img src="images/producto.PNG" alt="Masha Wow!">
-                                            </a>
-                                            <div class="product-detail-inner">
-                                                <div class="detail-inner-left align-center">
-                                                    <ul>
-                                                        <li class="pro-cart-icon">
-                                                            <form>
-                                                                <button title="Obtener Código"><span></span></button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-item-details">
-                                            <div class="product-item-name">
-                                                <a href="producto-abierto.php">Masha Wow!</a>
-                                            </div>
-                                            <div class="price-box">
-                                                <span class="price">$80.00</span>
-                                                <del class="price old-price">$100.00</del>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="pagination-bar align-center">
-                                        <ul>
-                                            <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
-                                            <li class="active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                              <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -522,6 +190,5 @@
         </div>
 
         <?php require('part-script.php'); ?>
-
     </body>
 </html>

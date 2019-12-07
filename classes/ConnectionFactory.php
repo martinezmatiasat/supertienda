@@ -113,7 +113,7 @@ class ConnectionFactory{
 				$stmt .= ' where ';
 				$stmt .= implode(' and ', $where);
 			}
-			
+
 			if ($orderBy && $orderBy != '') $stmt .= ' order by '.$orderBy;
 			if ($limit && $limit != '') {
 				$stmt2 = "select count(*) c from ($stmt)t1";
@@ -133,6 +133,14 @@ class ConnectionFactory{
 		}
 		return array('error' => $error, 'list' => $list, 'totalRows' => $totalRows);
 	}
+
+	public function getByOrderAsc(){
+		//SELECT * FROM `producto` WHERE `eliminado` = 0 ORDER BY `nombre`
+
+
+	}
+
+
 
 	public function getRandomList($table, $class, $limit = 1){
 		$error = false;

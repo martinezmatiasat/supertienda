@@ -14,7 +14,7 @@ if (isset($_GET["comprar"])) {
     $com->insert();
 }
 if (isset($_POST["emailcupon"])) {
-   echo "funciona";
+   header('Location: producto-abierto.php');
 }
 require('part-head.php');
 
@@ -95,7 +95,6 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                     </div>
                                  </div>
                               <?php } else { ?>
-                                 <!-- esto se imprime una vez clickeado en obtener cupon -->
                                  <div class="detail-inner-left show-on-buy">
                                     <ul>
                                        <h3>
@@ -114,7 +113,6 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                        </form>
                                     </ul>
                                  </div>
-                                 <!-- /esto se imprime una vez clickeado en obtener cupon -->
                               <?php }
                               if (isset($_POST["emailcupon"])) { ?>
                                  <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
