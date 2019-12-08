@@ -1,4 +1,7 @@
 <!-- FOOTER START -->
+<?php include_once('config.php');
+require('part-head.php');
+$categorias = Categoria::getAllList(); ?>
 <div class="footer">
     <div class="footer-inner">
         <div class="footer-top ptb-40">
@@ -67,16 +70,12 @@
         <div class="footer-bottom top">
             <div class="container">
                 <div class="site-link align-center col-sm-12">
-                    <ul>
-                        <li><a>Categoría 1</a>|</li>
-                        <li><a>Categoría 2</a>|</li>
-                        <li><a>Categoría 3</a>|</li>
-                        <li><a>Categoría 4</a>|</li>
-                        <li><a>Categoría 5</a>|</li>
-                        <li><a>Categoría 6</a>|</li>
-                        <li><a>Categoría 7</a>|</li>
-                        <li><a>Categoría 8</a></li>
-                    </ul>
+                   <ul>
+                      <li>|</li>
+                   <?php foreach ($categorias['results'] as $cat) {
+                        if ($cat->subcategoria_id=='0') ?> <li><a><?php echo $cat->nombre ?></a>|</li>
+                  <?php } ?>
+                  </ul>
                 </div>
                 <div class="col-sm-12 align-center">
                     <div class="copy-right center-xs">© 2019 Todos los derechos reservados. </div>
@@ -120,4 +119,4 @@
 <div class="scroll-top">
     <div id="scrollup"></div>
 </div>
-<!-- FOOTER END --> 
+<!-- FOOTER END -->

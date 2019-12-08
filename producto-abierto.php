@@ -50,8 +50,10 @@ require('part-head.php');
             <div class="row">
                <div class="col-md-5 col-sm-5 mb-xs-30">
                   <div class="fotorama" data-nav="thumbs" data-allowfullscreen="native">
+                     <?php list($url,$size) = returnThumbnailImage($producto->foto,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",800,1000,IMAGES_PATH_HTML.'product-default.jpg',IMAGES_PATH.'product-default.jpg'); ?>
+                     <a href="#"><img src=<?php echo $url ?> alt="Streetwear"></a>
                      <?php foreach ($imagenes['results'] as $img){
-                        list($url,$size) = returnThumbnailImage($img->imagen,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",80,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg');?>
+                        list($url,$size) = returnThumbnailImage($img->imagen,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,80,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg');?>
                         <a href="#"><img src=<?php echo $url ?> alt="Streetwear"></a>
                      <?php } ?>
                   </div>
@@ -115,11 +117,11 @@ require('part-head.php');
                                  </div>
                               <?php } else {
                                  ///ENVIO EL MAIL
-                        			/*$search = array("##WEB_URL##");
+                        			$search = array("##WEB_URL##");
                         			$replace = array(WEB_URL);
-                        			$msg = file_get_contents(WEB_PATH.'mails/registro-user.html');
+                        			$msg = file_get_contents(WEB_PATH.'mails/cupon-mail.html');
                         			$msg = str_ireplace($search, $replace, $msg);
-                        			sendEmail($usuario->email, 'Cupón enviado', $msg);*/ ?>
+                        			sendEmail($_REQUEST["emailcupon"], 'Cupón enviado', $msg); ?>
                                  <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
                               <?php }
                            } ?>
