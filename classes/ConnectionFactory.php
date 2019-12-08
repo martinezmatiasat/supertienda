@@ -95,7 +95,7 @@ class ConnectionFactory{
     			$result->free();
 			}
 			else $error = $mysqli->error;
-		}catch (Exception $e){
+		} catch (Exception $e) {
 			$error = $e->getMessage();
 		}
 		return array('error' => $error, 'object' => $object);
@@ -133,14 +133,6 @@ class ConnectionFactory{
 		}
 		return array('error' => $error, 'list' => $list, 'totalRows' => $totalRows);
 	}
-
-	public function getByOrderAsc(){
-		//SELECT * FROM `producto` WHERE `eliminado` = 0 ORDER BY `nombre`
-
-
-	}
-
-
 
 	public function getRandomList($table, $class, $limit = 1){
 		$error = false;

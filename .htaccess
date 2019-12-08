@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+Options -Indexes
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/\.]+)/$ shop.php?url=$1 [L]
+
+</IfModule>

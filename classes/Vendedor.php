@@ -33,6 +33,11 @@ class Vendedor{
 		return $result["object"];
 	}
 
+	public static function getByUrl($url) {
+		$result = ConnectionFactory::getFactory()->getByArray("vendedor", array("url"), array($url), "Vendedor");
+		return $result["object"];
+	}
+
 	public static function getAllList() {
 	    $result = ConnectionFactory::getFactory()->getList("vendedor", "Vendedor", null, null, null );
 	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));

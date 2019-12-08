@@ -1,12 +1,10 @@
 <?php
 include_once 'config.php';
-
 $producto = Producto::getById(getVar('pid'));
-if (!$producto || $producto->eliminado){
+ if (!$producto || $producto->eliminado){
     header('Location: index.php');
     exit();
 }
-
 if (isset($_GET["comprar"])) {
     $com = new Compra(array('producto_id' => $producto->producto_id, 'vendedor_id'=>$producto->vendedor_id, 'codigo'=>strtoupper(generateRandomString(6)), 'estado'=> 0));
     $com->session_id = session_id();
@@ -16,10 +14,9 @@ if (isset($_GET["comprar"])) {
 if (isset($_POST["emailcupon"])) {
    header('Location: producto-abierto.php');
 }
-require('part-head.php');
-
 $relacionados = Producto::getRelacionados($producto);
 $imagenes = ProductoImagen::getAllList($producto->producto_id);
+require('part-head.php');
 ?>
 <!DOCTYPE html>
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -54,7 +51,7 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                <div class="col-md-5 col-sm-5 mb-xs-30">
                   <div class="fotorama" data-nav="thumbs" data-allowfullscreen="native">
                      <?php foreach ($imagenes['results'] as $img){
-                        list($url,$size) = returnThumbnailImage($img->imagen,PRODUCTOS_PATH_HTML,PRODUCTOS_PATH,80,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg');?>
+                        list($url,$size) = returnThumbnailImage($img->imagen,PRODUCTOS_PATH_HTML."crop5/",PRODUCTOS_PATH."crop5/",80,100,ADMIN_IMAGES_PATH_HTML.'nopic.jpg',ADMIN_IMAGES_PATH.'nopic.jpg');?>
                         <a href="#"><img src=<?php echo $url ?> alt="Streetwear"></a>
                      <?php } ?>
                   </div>
@@ -94,7 +91,8 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                        </ul>
                                     </div>
                                  </div>
-                              <?php } else { ?>
+                              <?php } else {
+                                 if (!isset($_REQUEST["emailcupon"])) { ?>
                                  <div class="detail-inner-left show-on-buy">
                                     <ul>
                                        <h3>
@@ -102,7 +100,9 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                           y tiene una validez de <?php echo $producto->duracion ?> días.
                                        </h3>
                                        <p>Enviar cupón por correo:</p>
-                                       <form action="producto-abierto.php" method="post">
+                                       <form action="producto-abierto.php" method="get">
+                                          <input type="hidden" name="pid" value="<?php echo $producto->producto_id ?>">
+                                          <input type="hidden" name="comprar" value="">
                                           <div class="form-group">
                                              <input type="email" name="emailcupon" class="form-control" required data-required-error="Campo Obligatorio" placeholder="ejemplo@dominio.com">
                                              <div class="help-block with-errors"></div>
@@ -113,10 +113,16 @@ $imagenes = ProductoImagen::getAllList($producto->producto_id);
                                        </form>
                                     </ul>
                                  </div>
-                              <?php }
-                              if (isset($_POST["emailcupon"])) { ?>
+                              <?php } else {
+                                 ///ENVIO EL MAIL
+                        			/*$search = array("##WEB_URL##");
+                        			$replace = array(WEB_URL);
+                        			$msg = file_get_contents(WEB_PATH.'mails/registro-user.html');
+                        			$msg = str_ireplace($search, $replace, $msg);
+                        			sendEmail($usuario->email, 'Cupón enviado', $msg);*/ ?>
                                  <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
-                              <?php } ?>
+                              <?php }
+                           } ?>
                                  <div class="share-link">
                                     <label>Compatir en : </label>
                                     <div class="social-link">
