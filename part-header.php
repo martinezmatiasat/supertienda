@@ -1,5 +1,5 @@
-<!-- HEADER START -->
-<?php include_once('config.php');
+<?php 
+include_once('config.php');
 require('part-head.php');
 $categorias = Categoria::getAllList(); ?>
 <header class="navbar navbar-custom" id="header">
@@ -16,7 +16,7 @@ $categorias = Categoria::getAllList(); ?>
                      <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
                         <i class="fa fa-bars"></i></button>
                         <a class="navbar-brand page-scroll" href="index.php">
-                           <img alt="Masha Wow!" src="images/logo.png">
+                           <img alt="Masha Wow!" src="<?php echo WEB_PATH_HTML ?>images/logo.png">
                         </a>
                      </div>
                   </div>
@@ -25,9 +25,9 @@ $categorias = Categoria::getAllList(); ?>
                         <ul>
                            <li class="mobile-view-search">
                               <div class="header_search_toggle mobile-view">
-                                 <form>
+                                 <form action="shop.php">
                                     <div class="search-box">
-                                       <input type="text" placeholder="Buscar" class="input-text">
+                                       <input type="text" placeholder="Buscar" class="input-text" name="q">
                                        <button class="search-btn"></button>
                                     </div>
                                  </form>
@@ -92,10 +92,7 @@ $categorias = Categoria::getAllList(); ?>
          <div class="container">
             <div id="menu" class="navbar-collapse collapse left-side align-center" >
                <ul class="nav navbar-nav">
-                  <li class="level"><a href="" class="page-scroll">Todas las categorías</a></li>
-
-
-
+                  <li class="level"><a href="shop.php" class="page-scroll">Todas las categorías</a></li>
                   <?php
                   foreach ($categorias['results'] as $cat) {
                      $tieneSubcat = false;
@@ -114,7 +111,7 @@ $categorias = Categoria::getAllList(); ?>
                                           <ul class="sub-menu-level2 ">
                                              <?php foreach ($categorias['results'] as $subcat) {
                                                 if ($subcat->subcategoria_id==$cat->categoria_id) { ?>
-                                                   <li class="level3"><a href="#"><?php echo $subcat->nombre ?></a></li>
+                                                   <li class="level3"><a href="shop.php?cid=<?php echo $subcat->categoria_id ?>"><?php echo $subcat->nombre ?></a></li>
                                                 <?php }
                                              }?>
                                           </ul>

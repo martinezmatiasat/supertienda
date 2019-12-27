@@ -12,7 +12,7 @@ if (isset($_SESSION['userId'])){
 
 ////PERMISOS DE ACCESO
 $pagina = basename($_SERVER['PHP_SELF']);
-$pages = array("productos.php","productoImagenes.php","upload-image-producto_imagen.php"); /////AGREGAR TODAS LAS PAGINAS A LAS QUE EL VENDEDOR TIENE ACCESO
+$pages = array("productos.php","productoImagenes.php","upload-image-producto_imagen.php","compras.php","get-sales-chart-multi.php"); /////AGREGAR TODAS LAS PAGINAS A LAS QUE EL VENDEDOR TIENE ACCESO
 if ($session->rol == 1){
     $vendedor = Vendedor::getByU1($session->u1_id);
     if (!$vendedor){
@@ -29,7 +29,7 @@ if ($session->rol == 1){
 }else {
     define ('VENDEDOR', FALSE);
     Define ('VENDEDOR_ID', 0);
-    if (in_array($pagina, $pages)){
+    if (in_array($pagina, $pages) && $pagina != "compras.php"){
         header("Location: index.php");
         exit();
     }

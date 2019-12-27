@@ -6,9 +6,9 @@
 	define( 'DB_HOST', 'localhost' );
 	define( 'DB_NAME', 'supertienda' );
 
-	define( 'WEB_URL', 'http://localhost/SuperTienda/' );
-	define( 'WEB_PATH', realpath($_SERVER['DOCUMENT_ROOT']).'/SuperTienda/' );
-	define( 'WEB_PATH_HTML','/SuperTienda/' );
+	define( 'WEB_URL', 'http://localhost/Externo/Supertienda/' );
+	define( 'WEB_PATH', realpath($_SERVER['DOCUMENT_ROOT']).'/Externo/Supertienda/' );
+	define( 'WEB_PATH_HTML','/Externo/Supertienda/' );
 
 	include WEB_PATH.'constants.php';
 	include WEB_PATH.'functions.php';

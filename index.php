@@ -109,7 +109,7 @@ $productos = Producto::getIndex();
                ?>
                <div class="col-sm-4">
                   <div class="sub-banner sub-banner3">
-                     <a href="index.php"> <img src="<?php echo $url ?>" alt="Masha Wow!">
+                     <a href="shop.php?cid=<?php echo $cat->categoria_id ?>"> <img src="<?php echo $url ?>" alt="Masha Wow!">
                         <div class="sub-banner-detail">
                            <div class="sub-banner-subtitle"><?php echo $cat->nombre ?></div>
                            <div class="sub-banner-title"><?php echo $cat->nombre ?></div>

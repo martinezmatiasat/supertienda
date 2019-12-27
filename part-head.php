@@ -19,17 +19,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- CSS
       ================================================== --> 
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
-    <link rel="stylesheet" type="text/css" href="css/fotorama.css">
-    <link rel="stylesheet" type="text/css" href="css/magnific-popup.css">
-    <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link rel="stylesheet" type="text/css" href="css/responsive.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/fotorama.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/magnific-popup.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/custom.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo WEB_PATH_HTML ?>css/responsive.css">
 
-    <link rel="shortcut icon" href="images/favicon.png">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    <link rel="shortcut icon" href="<?php echo WEB_PATH_HTML ?>images/favicon.png">
+    <link rel="apple-touch-icon" href="<?php echo WEB_PATH_HTML ?>images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="<?php echo WEB_PATH_HTML ?>images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="<?php echo WEB_PATH_HTML ?>images/apple-touch-icon-114x114.png">
 </head>

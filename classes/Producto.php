@@ -45,7 +45,7 @@ class Producto{
 		if (!$rows || !ctype_digit($rows)) $rows = DEFAULT_ROWS;
 		$limit1 = ($page-1)*$rows;
 		$limit2 = $rows;
-		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0"), null );
+		//$result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0"), null );
 		$result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", array("eliminado = 0", "vendedor_id = $vid"), null );
 		return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
 	}
@@ -158,6 +158,32 @@ class Producto{
 		$select .= '</select>';
 		return $select;
 	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static function getFrontList($page, $rows, $order, $q, $hasta, $desde, $vid, $cid) {
+	    if (!$rows || !ctype_digit($rows) || !is_numeric($rows)) $rows = 24;
+	    $limit1 = ($page-1)*$rows;
+	    $limit2 = $rows;
+	    $priceSet = '(case when descuento > 0 then descuento else precio end)';
+	    $sort = '';
+	    
+	    $where = array("eliminado = 0");
+	    if ($q && $q != '') $where[] = " nombre like '%$q%' ";
+	    if ($vid && $vid != '') $where[] = " vendedor_id like '%$vid%' ";
+	    if ($cid && $cid != '') $where[] = "(categorias = '$cid' || categorias like '%,$cid' || categorias like '%,$cid,%' || categorias like '$cid,%')";
+	    if ($desde && $desde != '') $where[] = " $priceSet >= '$desde' ";
+	    if ($hasta && $hasta != '') $where[] = " $priceSet <= '$hasta' ";
+	    if ($order == 1) $sort = 'nombre';
+	    else if ($order == 2) $sort = 'nombre desc';
+	    else if ($order == 3) $sort = $priceSet;
+	    else if ($order == 4) $sort = $priceSet.' desc';
+	    
+	    
+	    $result = ConnectionFactory::getFactory()->getList("producto", "Producto", " $limit1,$limit2 ", $where, $order);
+	    return (array("results" => $result["list"], "totalRows" => $result["totalRows"]));
+	}
+	
 
 }
 ?>

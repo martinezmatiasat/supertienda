@@ -73,7 +73,7 @@ $categorias = Categoria::getAllList(); ?>
                    <ul>
                       <li>|</li>
                    <?php foreach ($categorias['results'] as $cat) {
-                        if ($cat->subcategoria_id=='0') ?> <li><a><?php echo $cat->nombre ?></a>|</li>
+                       if ($cat->subcategoria_id=='0') ?> <li><a href="shop.php?cid=<?php echo $cat->categoria_id ?>"><?php echo $cat->nombre ?></a>|</li>
                   <?php } ?>
                   </ul>
                 </div>

@@ -71,7 +71,9 @@ ob_start("callback");
 				    ////SOLO SE VE SI ES VENDEDOR
 				?>
 				<li><a href="productos.php"><i class="fas fa-list"></i> <span><?php echo showLang($lang, 'HEADER_PRODUCTO') ?></span></a></li>
+				
 				<?php } ?>
+				<li><a href="compras.php"><i class="fas fa-shopping-cart"></i> <span><?php echo showLang($lang, 'HEADER_COMPRA') ?></span></a></li>
 			</ul>
 		</div>
 		<div id="content">

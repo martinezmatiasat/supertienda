@@ -67,7 +67,7 @@ function deleteAllCompra() {
 }
 
 function listCompra($results) {
-	$data = Compra::getAllList();
+    $data = Compra::getAllList(VENDEDOR_ID);
 	$results["all"] = $data["results"];
 	$results["totalRows"] = $data["totalRows"];
 	$results["pageTitle"] = showLang($results["lang"], "COMPRA_LIST");
@@ -182,41 +182,40 @@ function listCompras($results){
 	<?php if ( isset( $results["statusMessage"] ) ) { ?><div class="alert alert-success"><?php echo $results["statusMessage"] ?></div><?php } ?>
 	<div class="row">
 		<div class="col-xs-12">
-			<a class="btn btn-sm btn-dark-green" href="compras.php?action=new"><?php echo showLang($lang,"COMPRA_ADD") ?></a>
 			<div class="widget-box with-table table-responsive">
 				<div class="widget-content nopadding">
 					<table class="table table-bordered table-striped table-hover table-condensed  data-table">
 						<thead>
 							<tr>
-                                <th width="40px"><input type="checkbox" id="select-all"></th>
-								<th><?php echo showLang($lang,"COMPRA_COL_COMPRA_ID") ?></th>
+                                <th><?php echo showLang($lang,"COMPRA_COL_COMPRA_ID") ?></th>
 								<th><?php echo showLang($lang,"COMPRA_COL_PRODUCTO_ID") ?></th>
-								<th><?php echo showLang($lang,"COMPRA_COL_VENDEDOR_ID") ?></th>
 								<th><?php echo showLang($lang,"COMPRA_COL_CODIGO") ?></th>
 								<th><?php echo showLang($lang,"COMPRA_COL_EMAIL") ?></th>
 								<th><?php echo showLang($lang,"COMPRA_COL_ESTADO") ?></th>
-								<th><?php echo showLang($lang,"COMPRA_COL_SESSION_ID") ?></th>
 								<th><?php echo showLang($lang,"COMPRA_COL_FECHA_EXPIRACION") ?></th>
 								<th><?php echo showLang($lang,"COMPRA_COL_FECHA_COMPRA") ?></th>
 								<th><?php echo showLang($lang, "TABLE_ACTIONS") ?></th>
 							</tr>
 						</thead>
 						<tbody>
-						<?php foreach ( $results["all"] as $num => $a ) { ?>
+						<?php foreach ( $results["all"] as $num => $a ) {
+						      $p = Producto::getById($a->producto_id); 
+						      $mins = diffMins($a->fecha_expiracion, date('Y-m-d H:i:s'));
+						      if ($mins < 0){
+						          $a->estado = 2;
+						          $a->updateFields(array("estado"));
+						      }
+						   ?>
 							<tr>
-                                <td align="center"><input type="checkbox" name="ids[]" value="<?php echo $a->compra_id ?>"></td>
-								<td><?php echo $a->compra_id ?></td>
-								<td><?php echo $a->producto_id ?></td>
-								<td><?php echo $a->vendedor_id ?></td>
+                                <td><?php echo $a->compra_id ?></td>
+								<td><?php echo $p ? $p->nombre : '' ?></td>
 								<td><?php echo $a->codigo ?></td>
 								<td><?php echo $a->email ?></td>
-								<td><?php echo $a->estado ?></td>
-								<td><?php echo $a->session_id ?></td>
+								<td><?php echo $a->estado == 0 ? 'Pendiente' : ($a->estado == 1 ? 'Usado' : 'Expirado') ?></td>
 								<td><?php echo $a->fecha_expiracion ?></td>
 								<td><?php echo $a->fecha_compra ?></td>
 								<td align="center" width="100px">
-					        		<a title="<?php echo showLang($lang, "TABLE_EDIT") ?>" class="tip-top edit" href="compras.php?action=edit&amp;id=<?php echo $a->compra_id ?>&page=<?php echo isset($_GET["page"]) ? $_GET["page"] : 1 ?>"><i class="fa fa-pencil-alt"></i></a>
-					          		<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" data-txt="<?php echo showLang($lang, 'COMPRA_DELETE_CONFIRM') ?>" data-href="compras.php?action=delete&amp;ids=<?php echo $a->compra_id ?>">
+					        		<a title="<?php echo showLang($lang, "TABLE_DELETE") ?>" class="tip-top delete" data-txt="<?php echo showLang($lang, 'COMPRA_DELETE_CONFIRM') ?>" data-href="compras.php?action=delete&amp;ids=<?php echo $a->compra_id ?>">
 					          			<i class="far fa-trash-alt"></i>
 					          		</a>
 			          			</td>
@@ -226,10 +225,6 @@ function listCompras($results){
 					</table>
 				</div>
 			</div>		
-			<a class="btn btn-sm btn-dark-green" href="compras.php?action=new"><?php echo showLang($lang,"COMPRA_ADD") ?></a>
-            |
-            <a class="btn btn-sm btn-danger delete-selected" data-href="compras.php?action=delete" data-txt="<?php echo showLang($lang,"DELETE_SELECTED_TXT") ?>"><?php echo showLang($lang,"DELETE_SELECTED") ?></a>
-			<a class="btn btn-sm btn-danger delete" data-href="compras.php?action=deleteAll" data-txt="<?php echo showLang($lang,"DELETE_ALL_TXT") ?>"><?php echo showLang($lang,"DELETE_ALL") ?></a>
 		</div>
 	</div>
 </div>

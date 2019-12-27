@@ -261,3 +261,60 @@ function sharer(){
 		if (window.focus) newWindow.focus();
 	});
 }
+
+
+/////////////////////////////////////////////////////////
+
+//////////////INDEX
+function dashboard(){
+	google.load('visualization', '1.0', {'packages':['corechart']});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+    	var length = titles.length, element = null;
+    	var data = new google.visualization.DataTable();
+    	data.addColumn('string', 'Topping');
+    	data.addColumn('number', 'Slices'); 	
+    	for (var i = 0; i < length; i++) data.addRow([titles[i], parseInt(sales[i])]);
+    	var options = {is3D: true, 'backgroundColor' : '#FAFAFA'};
+    	var chart = new google.visualization.PieChart(document.getElementById('all-sales'));
+    	chart.draw(data, options);
+    }
+    google.load('visualization', '1', {packages:['corechart'], 'callback' : function(){loadMonthSales();}});
+    $(".salesYears").change(function(){loadMonthSales();});
+}
+
+function loadMonthSales(){
+	$.post( "ajax/get-sales-chart.php",{year: $(".salesYears").val()}, function(resp) {
+		var data = google.visualization.arrayToDataTable(resp);
+		var options = {'backgroundColor' : '#FAFAFA', 'legend' : {position: 'top'}};
+		var chart = new google.visualization.LineChart(document.getElementById('month-sales'));
+		chart.draw(data, options);
+	}, "json");
+}
+
+function dashboardMulti(){
+	google.load('visualization', '1.0', {'packages':['corechart']});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+    	var length = titles.length, element = null;
+    	var data = new google.visualization.DataTable();
+    	data.addColumn('string', 'Topping');
+    	data.addColumn('number', 'Slices'); 	
+    	for (var i = 0; i < length; i++) data.addRow([titles[i], parseInt(sales[i])]);
+    	var options = {is3D: true, 'backgroundColor' : '#FAFAFA'};
+    	var chart = new google.visualization.PieChart(document.getElementById('all-sales'));
+    	chart.draw(data, options);
+    }
+    google.load('visualization', '1', {packages:['corechart'], 'callback' : function(){loadMonthSalesMulti();}});
+    $(".salesYears").change(function(){loadMonthSalesMulti();});
+}
+
+function loadMonthSalesMulti(){
+	$.post( "ajax/get-sales-chart-multi.php",{year: $(".salesYears").val()}, function(resp) {
+		var data = google.visualization.arrayToDataTable(resp);
+		var options = {'backgroundColor' : '#FAFAFA', 'legend' : {position: 'top'}};
+		var chart = new google.visualization.LineChart(document.getElementById('month-sales'));
+		chart.draw(data, options);
+	}, "json");
+}
+

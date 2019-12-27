@@ -422,6 +422,11 @@ function stripPredefinedVariablesSlashes(){
 					function showLang($lang, $index){
 						return isset($lang[$index]) ? utf8_encode($lang[$index]) : $index;
 					}
+					
+					
+					function showPrice($p){
+					    return '$'.number_format($p, 2);
+					}
 
 					/////////////////////////////////// FRONT ////////////////////////////////////////
 					function getFrontLanguage(){
@@ -474,6 +479,13 @@ function stripPredefinedVariablesSlashes(){
 						$days = abs($days);
 						$days = floor($days);
 						return $days;
+					}
+					
+					function diffMins($date_i,$date_f){
+					    $days = (strtotime($date_i)-strtotime($date_f))/60;
+					    //$days = abs($days);
+					    $days = floor($days);
+					    return $days;
 					}
 
 					function showLangFront($lang, $index){
@@ -553,5 +565,20 @@ function stripPredefinedVariablesSlashes(){
 										$mail->SMTPDebug = SMAIL_DEBUG;
 									}
 									$mail->Send();
+								}
+								
+								
+
+								function generateUrl($q, $cid, $desde, $hasta, $order, $rows, $url = null){
+								    if (!$url) $url = 'shop.php?'; else $url .= '?';
+								    $vars = array();
+								    if ($q != '') $vars[] = "q=$q";
+								    if ($cid != '') $vars[] = "cid=$cid";
+								    if ($desde != '') $vars[] = "pd=$desde";
+								    if ($hasta != '') $vars[] = "ph=$hasta";
+								    if ($order != '') $vars[] = "order=$order";
+								    if ($rows != '') $vars[] = "rows=$rows";
+								    
+								    return $url.implode('&', $vars);
 								}
 								?>

@@ -85,5 +85,9 @@ class Vendedor{
 	public function updateFields($fields) {
 		ConnectionFactory::getFactory()->update($this, "vendedor", $fields, "vendedor_id");
 	}
+	
+	public function getUrl(){
+	    return WEB_PATH_HTML.$this->url.'/';
+	}
 }
 ?>

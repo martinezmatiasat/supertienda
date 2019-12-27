@@ -5,15 +5,34 @@ $producto = Producto::getById(getVar('pid'));
     header('Location: index.php');
     exit();
 }
-if (isset($_GET["comprar"])) {
+
+$com = Compra::getBySession(session_id());
+
+if (isset($_GET["comprar"]) && !$com) {
     $com = new Compra(array('producto_id' => $producto->producto_id, 'vendedor_id'=>$producto->vendedor_id, 'codigo'=>strtoupper(generateRandomString(6)), 'estado'=> 0));
+    $com->total = 
     $com->session_id = session_id();
     $com->fecha_expiracion = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s")." + ".$producto->duracion." days"));
     $com->insert();
+    header('Location: producto-abierto.php?pid='.$producto->producto_id);
+    exit();
 }
-if (isset($_POST["emailcupon"])) {
-   header('Location: producto-abierto.php');
+
+if (isset($_POST['mail']) && $com && $com->email == ''){
+    ///ENVIO EL MAIL
+    $mail = getVar('emailcupon');
+    $com->email = $mail;
+    $com->updateFields(array("email"));
+    
+    ////ENVIO MAIL
+    $search = array("##WEB_URL##","##CUPON##",'##PRODUCTO##','##DIAS##');
+    $replace = array(WEB_URL, $com->codigo, $producto->nombre, $producto->duracion);
+    $msg = file_get_contents(WEB_PATH.'mails/cupon-mail.html');
+    $msg = str_ireplace($search, $replace, $msg);
+    sendEmail($mail, 'Cup�n enviado', $msg);
 }
+
+
 $relacionados = Producto::getRelacionados($producto);
 $imagenes = ProductoImagen::getAllList($producto->producto_id);
 require('part-head.php');
@@ -72,12 +91,8 @@ require('part-head.php');
                                     <span class="price"><?php echo "$ $producto->precio"; ?></span>
                                  <?php } ?>
                               </div>
-                              <p>
-                                 Esta es una descripción de la Oferta Esta es una descripción de la Oferta
-                                 Esta es una descripción de la Oferta Esta es una descripción de la Oferta
-                                 Esta es una descripción de la Oferta Esta es una descripción de la Oferta
-                              </p>
-                              <?php if (!isset($_GET["comprar"])) { ?>
+                              <p><?php echo $producto->descripcion ?></p>
+                              <?php if (!$com) { ?>
                                  <div class="mb-40">
                                     <div class="bottom-detail cart-button">
                                        <ul>
@@ -93,38 +108,30 @@ require('part-head.php');
                                        </ul>
                                     </div>
                                  </div>
-                              <?php } else {
-                                 if (!isset($_REQUEST["emailcupon"])) { ?>
+                              <?php } else { ?>
                                  <div class="detail-inner-left show-on-buy">
                                     <ul>
                                        <h3>
                                           El cupón es: <?php echo $com->codigo ?> <br/>
                                           y tiene una validez de <?php echo $producto->duracion ?> días.
                                        </h3>
+                                       <?php if ($com->email == ''){ ?>
                                        <p>Enviar cupón por correo:</p>
-                                       <form action="producto-abierto.php" method="get">
-                                          <input type="hidden" name="pid" value="<?php echo $producto->producto_id ?>">
-                                          <input type="hidden" name="comprar" value="">
+                                       <form action="producto-abierto.php?pid=<?php echo $producto->producto_id ?>" method="post">
                                           <div class="form-group">
                                              <input type="email" name="emailcupon" class="form-control" required data-required-error="Campo Obligatorio" placeholder="ejemplo@dominio.com">
                                              <div class="help-block with-errors"></div>
                                           </div>
                                           <div class="form-group">
-                                             <button type="submit" name="submit" class="btn-black">Enviar cupón</button>
+                                             <button type="submit" name="mail" class="btn-black">Enviar cupón</button>
                                           </div>
                                        </form>
+                                       <?php }else { ?>
+                                       <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
+                                       <?php } ?>
                                     </ul>
                                  </div>
-                              <?php } else {
-                                 ///ENVIO EL MAIL
-                        			$search = array("##WEB_URL##");
-                        			$replace = array(WEB_URL);
-                        			$msg = file_get_contents(WEB_PATH.'mails/cupon-mail.html');
-                        			$msg = str_ireplace($search, $replace, $msg);
-                        			sendEmail($_REQUEST["emailcupon"], 'Cupón enviado', $msg); ?>
-                                 <div class="alert alert-success"><strong>El Cupón fue enviado a su correo</strong></div>
-                              <?php }
-                           } ?>
+                              <?php } ?>
                                  <div class="share-link">
                                     <label>Compatir en : </label>
                                     <div class="social-link">
@@ -143,6 +150,7 @@ require('part-head.php');
                </div>
             </div>
          </section>
+         <?php if ($relacionados['totalRows'] > 0){ ?>
          <section class="container">
             <div class="pb-85">
                <div class="product-slider owl-slider">
@@ -201,6 +209,7 @@ require('part-head.php');
                </div>
             </div>
          </section>
+         <?php } ?>
          <!-- CONTAINER END -->
          <?php require('part-footer.php'); ?>
       </div>
